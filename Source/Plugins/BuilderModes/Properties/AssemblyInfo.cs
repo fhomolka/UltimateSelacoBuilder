@@ -6,11 +6,11 @@ using System.Resources;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Builder Modes")]
-[assembly: AssemblyDescription("Ultimate Doom Builder Editing Modes")]
+[assembly: AssemblyDescription("Ultimate Selaco Builder Editing Modes")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CodeImp, MaxED, ZZYZX, boris, dpJudas and others")]
-[assembly: AssemblyProduct("Ultimate Doom Builder")]
-[assembly: AssemblyCopyright("Copyright © 2007, 2016, 2017-2019")]
+[assembly: AssemblyCompany("Altered Orbit Studios, CodeImp, MaxED, ZZYZX, boris, dpJudas and others")]
+[assembly: AssemblyProduct("Ultimate Selaco Builder")]
+[assembly: AssemblyCopyright("Copyright © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -11,15 +11,15 @@
   "R" + Local[0]
 
 [Setup]
-AppName=Ultimate Doom Builder
+AppName=Ultimate Selaco Builder
 AppVersion={#UDB_GetVersionString} ({#UDB_arch})
-;AppVerName=Ultimate Doom Builder {#UDB_GetVersionString} ({#UDB_arch})
+;AppVerName=Ultimate Selaco Builder {#UDB_GetVersionString} ({#UDB_arch})
 AppPublisher=ZZYZX
 AppPublisherURL=https://forum.zdoom.org/memberlist.php?mode=viewprofile&u=7527
 AppSupportURL=https://forum.zdoom.org/viewtopic.php?f=232&t=66745
 AppUpdatesURL=https://ultimatedoombuilder.github.io/
-DefaultDirName={userpf}\Ultimate Doom Builder
-DefaultGroupName=Ultimate Doom Builder
+DefaultDirName={userpf}\Ultimate Selaco Builder
+DefaultGroupName=Ultimate Selaco Builder
 AllowNoIcons=true
 LicenseFile=..\LICENSE.txt
 OutputDir=..\Release
@@ -105,9 +105,9 @@ Source: Sprites\*; DestDir: {app}\Sprites; Flags: ignoreversion recursesubdirs
 Source: Textures\*; DestDir: {app}\Textures; Flags: ignoreversion
 
 [Icons]
-Name: {group}\Ultimate Doom Builder; Filename: {app}\Builder.exe
-Name: {group}\{cm:UninstallProgram,Ultimate Doom Builder}; Filename: {uninstallexe}
-Name: {autodesktop}\Ultimate Doom Builder; Filename: {app}\Builder.exe; Tasks: desktopicon
+Name: {group}\Ultimate Selaco Builder; Filename: {app}\Builder.exe
+Name: {group}\{cm:UninstallProgram,Ultimate Selaco Builder}; Filename: {uninstallexe}
+Name: {autodesktop}\Ultimate Selaco Builder; Filename: {app}\Builder.exe; Tasks: desktopicon
 
 [Run]
 Filename: {app}\Builder.exe; Description: Run {#SetupSetting("AppName")}; Flags: postinstall skipifsilent
@@ -120,7 +120,7 @@ Name: {app}; Type: filesandordirs
 ;Name: {app}\Builder.xml; Type: files
 
 [Registry]
-Root: HKCU; Subkey: SOFTWARE\Ultimate Doom Builder\; ValueType: string; ValueName: Location; ValueData: {app}; Flags: uninsdeletevalue
+Root: HKCU; Subkey: SOFTWARE\Ultimate Selaco Builder\; ValueType: string; ValueName: Location; ValueData: {app}; Flags: uninsdeletevalue
 
 [Messages]
 ReadyLabel2a=Continue to begin with the installation, or click Back if you want to review or change any settings.
