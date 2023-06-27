@@ -134,7 +134,7 @@ namespace CodeImp.DoomBuilder.Windows
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(568, 254);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "About Ultimate Doom Builder";
+            this.tabPage1.Text = "About Ultimate Selaco Builder";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // panel1
@@ -158,7 +158,7 @@ namespace CodeImp.DoomBuilder.Windows
             this.version.Name = "version";
             this.version.Size = new System.Drawing.Size(210, 13);
             this.version.TabIndex = 11;
-            this.version.Text = "Ultimate Doom Builder some version";
+            this.version.Text = "Ultimate Selaco Builder some version";
             // 
             // copyversion
             // 
