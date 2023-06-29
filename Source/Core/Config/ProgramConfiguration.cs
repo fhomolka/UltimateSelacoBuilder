@@ -741,13 +741,16 @@ namespace CodeImp.DoomBuilder.Config
 
 		/// <summary>
 		/// This applies the settings of the last edited thing to the given thing.
+		/// Except flags, they're still read from the main config.
 		/// </summary>
 		/// <param name="t">Thing to apply the settings to</param>
 		public void ApplyDefaultThingSettings(Thing t)
 		{
 			t.Type = defaultthingtype;
 			t.Rotate(defaultthingangle);
-			foreach(string f in defaultthingflags) t.SetFlag(f, true);
+			//TODO(fhomolka): Make this an option toggleable in the settings?
+			//foreach(string f in defaultthingflags) t.SetFlag(f, true);
+			foreach(string f in General.Map.Config.DefaultThingFlags) t.SetFlag(f, true);
 
 			//mxd. Set default arguments
 			ThingTypeInfo tti = General.Map.Data.GetThingInfoEx(t.Type);
