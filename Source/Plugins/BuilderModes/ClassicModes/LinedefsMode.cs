@@ -362,7 +362,11 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				if(curdistance < closest2) closest2 = curdistance;
 
 				// Return closer one
-				return (int)(closest1 - closest2);
+				// biwa: the difference between closest1 and closest2 can exceed the capacity of int, and that
+				// sometimes seem to cause problems, resulting in the sorting to throw an ArgumentException
+				// because of inconsistent results. Making sure to only return -1, 0, or 1 seems to fix the issue
+				// See https://github.com/UltimateDoomBuilder/UltimateDoomBuilder/issues/1053
+				return (closest1 - closest2) < 0 ? -1 : ((closest1 - closest2) > 0 ? 1 : 0);
 			});
 
 			return result;
