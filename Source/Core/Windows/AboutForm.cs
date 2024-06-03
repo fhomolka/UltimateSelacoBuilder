@@ -89,5 +89,15 @@ namespace CodeImp.DoomBuilder.Windows
         {
             General.OpenWebsite("https://github.com/m-x-d/GZDoom-Builder");
         }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
