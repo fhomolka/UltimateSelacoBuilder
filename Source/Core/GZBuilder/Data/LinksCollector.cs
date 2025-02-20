@@ -28,6 +28,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 			public readonly List<Thing> PathFollowers;
 			public readonly Dictionary<int, List<Thing>> PolyobjectAnchors; //angle, list of PolyobjectAnchors
 			public readonly Dictionary<int, List<Thing>> PolyobjectStartSpots; //angle, list of PolyobjectStartSpots
+			public readonly Dictionary<int, Thing> PathNodes;
 
 			public SpecialThings()
 			{
@@ -41,6 +42,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 				PathFollowers = new List<Thing>();
 				PolyobjectAnchors = new Dictionary<int, List<Thing>>();
 				PolyobjectStartSpots = new Dictionary<int, List<Thing>>();
+				PathNodes = new Dictionary<int, Thing>();
 			}
 		}
 
@@ -165,7 +167,15 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 					case "patrolspecial":
 						result.PatrolSpecials.Add(t);
 						break;
-
+					case "pathnode":
+					case "doornode":
+						int nodeid = t.Fields.GetValue("user_nodeid", -1);
+						if (nodeid < 0) nodeid = (int)t.Fields.GetValue("user_nodeid", -1.0);
+						if (nodeid >= 0 && !result.PathNodes.ContainsKey(nodeid))
+						{
+							result.PathNodes.Add(nodeid, t);
+						}
+						break;
 					case "$polyanchor":
 						if(!result.PolyobjectAnchors.ContainsKey(t.AngleDoom)) result.PolyobjectAnchors[t.AngleDoom] = new List<Thing>();
 						result.PolyobjectAnchors[t.AngleDoom].Add(t);
@@ -387,9 +397,30 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 				}
 			}
 
+			// Process pathnodes
+			foreach (KeyValuePair<int, Thing> t in result.PathNodes)
+			{
+				Thing tt = t.Value;
+				start = tt.Position;
+				start.z += GetCorrectHeight(tt, blockmap, true);
+
+				for(int x = 0; x < 8; x++)
+				{
+					int targetID = tt.Fields.GetValue("user_connection" + (x + 1), -1);
+					if(targetID < 0) targetID = (int)tt.Fields.GetValue("user_connection" + (x + 1), -1.0);
+					if (targetID >= 0 && result.PathNodes.ContainsKey(targetID))
+					{
+						Thing endNode = result.PathNodes[targetID];
+						end = endNode.Position;
+						end.z += GetCorrectHeight(endNode, blockmap, true);
+						lines.Add(new Line3D(start, end, General.Colors.InfoLine.WithAlpha(180)));
+					}
+				}
+			}
+
 			// Process interpolation points [CAN BE INTERPOLATED]
 			// 1. Connect PathNodes
-			foreach(KeyValuePair<int, List<PathNode>> group in result.InterpolationPoints)
+			foreach (KeyValuePair<int, List<PathNode>> group in result.InterpolationPoints)
 			{
 				foreach(PathNode node in group.Value)
 				{
