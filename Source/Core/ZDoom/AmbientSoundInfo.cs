@@ -195,7 +195,9 @@ namespace CodeImp.DoomBuilder.ZDoom
 
 			// There can be multiple different ambient sounds with the same sound name, so build a description containing the index
 			// and the name to differentiate them. See https://github.com/jewalky/UltimateDoomBuilder/issues/390
-			sounddescription = index.ToString() + ": " + soundname + " (" + type.ToString().ToLowerInvariant();
+			// @Cockatrice - To help autofill work properly, let's put the sound name first so you can start typing
+			//sounddescription = index.ToString() + ": " + soundname + " (" + type.ToString().ToLowerInvariant();
+			sounddescription = soundname + " (id: " + index.ToString() + ", " + type.ToString().ToLowerInvariant();
 
 			if (type == AmbientType.POINT)
 				sounddescription += ", attenuation: " + attenuation;
