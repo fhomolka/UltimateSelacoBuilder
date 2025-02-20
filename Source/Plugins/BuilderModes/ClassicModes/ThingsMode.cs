@@ -707,7 +707,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 				Thing t = MapSet.NearestThingSquareRange(General.Map.ThingsFilter.VisibleThings, mousemappos, BuilderPlug.Me.HighlightThingsRange / renderer.Scale);
 
 				//mxd. Show tooltip?
-				if(General.Map.UDMF && General.Settings.RenderComments && mouselastpos != mousepos && highlighted != null && !highlighted.IsDisposed && highlighted.Fields.ContainsKey("comment"))
+				if(General.Map.UDMF && General.Settings.RenderComments && mouselastpos != mousepos && highlighted != null && !highlighted.IsDisposed && (highlighted.Fields.ContainsKey("comment") || highlighted.Fields.ContainsKey("user_nodeid")))
 				{
 					string comment = highlighted.Fields.GetValue("comment", string.Empty);
 					if(comment.Length > 2)
@@ -716,7 +716,21 @@ namespace CodeImp.DoomBuilder.BuilderModes
 						int index = Array.IndexOf(CommentType.Types, type);
 						if(index > 0) comment = comment.TrimStart(type.ToCharArray());
 					}
-					General.Interface.Display.ShowToolTip("Comment:", comment, (int)(mousepos.x + 32 * MainForm.DPIScaler.Width), (int)(mousepos.y + 8 * MainForm.DPIScaler.Height));
+
+					int nodeid = highlighted.Fields.GetValue("user_nodeid", -1);
+					if(nodeid < 0) nodeid = (int)highlighted.Fields.GetValue("user_nodeid", -1.0);
+
+					if (nodeid >= 0 && comment.Length == 0)
+					{
+						General.Interface.Display.ShowToolTip("Node: " + nodeid, " ", (int)(mousepos.x + 32 * MainForm.DPIScaler.Width), (int)(mousepos.y + 8 * MainForm.DPIScaler.Height));
+					} else if(nodeid >= 0)
+					{
+						General.Interface.Display.ShowToolTip("Node: " + nodeid, comment, (int)(mousepos.x + 32 * MainForm.DPIScaler.Width), (int)(mousepos.y + 8 * MainForm.DPIScaler.Height));
+					} else
+					{
+						General.Interface.Display.ShowToolTip("Comment:", comment, (int)(mousepos.x + 32 * MainForm.DPIScaler.Width), (int)(mousepos.y + 8 * MainForm.DPIScaler.Height));
+					}
+					
 				}
 
 				// Highlight if not the same
