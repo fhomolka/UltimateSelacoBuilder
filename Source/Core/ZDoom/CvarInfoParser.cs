@@ -51,7 +51,7 @@ namespace CodeImp.DoomBuilder.ZDoom
 			if(!base.Parse(data, clearerrors)) return false;
 
 			// Continue until at the end of the stream
-			HashSet<string> knowntypes = new HashSet<string> { "int", "float", "color", "bool", "string" };
+			HashSet<string> knowntypes = new HashSet<string> { "int", "float", "color", "bool", "string", "setdefault" };
 			HashSet<string> flags = new HashSet<string> { "user", "server", "nosave", "noarchive", "cheat", "latch" };
 			while(SkipWhitespace(true))
 			{
@@ -65,26 +65,35 @@ namespace CodeImp.DoomBuilder.ZDoom
 				// doesn't make sense.
 				// See https://github.com/jewalky/UltimateDoomBuilder/issues/748
 
-				if (flags.Contains(token))
+				if (flags.Contains(token) || token.Equals("setdefault"))
 				{
-					// read (skip) flags
-					while (true)
+					string type = "";
+
+					if(token.Equals("setdefault"))
 					{
-						string flagtoken;
-
-						SkipWhitespace(true);
-						flagtoken = ReadToken().ToLowerInvariant();
-
-						if (!flags.Contains(flagtoken))
-						{
-							DataStream.Seek(-flagtoken.Length - 1, SeekOrigin.Current);
-							break;
-						}
+						type = "setdefault";
 					}
+					else
+					{
+						// read (skip) flags
+						while (true)
+						{
+							string flagtoken;
 
-					// Next should be the type
-					SkipWhitespace(true);
-					string type = ReadToken().ToLowerInvariant();
+							SkipWhitespace(true);
+							flagtoken = ReadToken().ToLowerInvariant();
+
+							if (!flags.Contains(flagtoken))
+							{
+								DataStream.Seek(-flagtoken.Length - 1, SeekOrigin.Current);
+								break;
+							}
+						}
+
+						// Next should be the type
+						SkipWhitespace(true);
+						type = ReadToken().ToLowerInvariant();
+					}
 
 					if (!knowntypes.Contains(type))
 					{
@@ -119,16 +128,26 @@ namespace CodeImp.DoomBuilder.ZDoom
 							}
 
 							// Add to collection
-							if (!AddValue(name, type, value)) return false;
+							if (!type.Equals("setdefault"))
+							{
+								if (!AddValue(name, type, value)) return false;
+							}
 
 							// Next should be ";"
 							if (!NextTokenIs(";")) return false;
 							break;
 
 						case ";":
-							if (!AddValue(name, type, string.Empty)) return false;
+							if (!type.Equals("setdefault"))
+							{
+								if (!AddValue(name, type, string.Empty)) return false;
+							}
 							break;
 					}
+				} 
+				else if(token.Equals("setdefault"))
+				{
+					// Skip setdefault, it concerns us not
 				}
 				else
 				{
