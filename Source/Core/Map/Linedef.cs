@@ -619,7 +619,7 @@ namespace CodeImp.DoomBuilder.Map
 						if(args[0] > General.Map.FormatInterface.MaxArgument) // Split sector tag?
 						{
 							int hitag = args[0] / 256;
-							int lotag = args[0] - hitag;
+							int lotag = args[0] % 256;
 
 							args[0] = lotag;
 							args[4] = hitag;
@@ -651,7 +651,7 @@ namespace CodeImp.DoomBuilder.Map
 						break;
 
 					default: // Convert tag to Line_SetIdentification?
-						if(tags[0] > General.Map.FormatInterface.MinArgument)
+						if(tags[0] > General.Map.FormatInterface.MaxArgument)
 						{
 							if(action != 0)
 							{
@@ -661,7 +661,7 @@ namespace CodeImp.DoomBuilder.Map
 							else // Convert to Line_SetIdentification
 							{
 								int hiid = tags[0] / 256;
-								int loid = tags[0] - hiid;
+								int loid = tags[0] % 256;
 
 								action = 121;
 								args[0] = loid;

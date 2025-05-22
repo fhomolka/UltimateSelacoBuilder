@@ -10,10 +10,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            name: "macOS",
-            os: macos-latest
-          }
+#        - {
+#            name: "macOS",
+#            os: macos-latest
+#          }
         - {
             name: "Linux",
             os: ubuntu-latest

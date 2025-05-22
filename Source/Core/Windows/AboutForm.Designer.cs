@@ -136,6 +136,7 @@ namespace CodeImp.DoomBuilder.Windows
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "About Ultimate Selaco Builder";
             this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // panel1
             // 
@@ -156,7 +157,7 @@ namespace CodeImp.DoomBuilder.Windows
             this.version.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.version.Location = new System.Drawing.Point(10, 12);
             this.version.Name = "version";
-            this.version.Size = new System.Drawing.Size(210, 13);
+            this.version.Size = new System.Drawing.Size(217, 13);
             this.version.TabIndex = 11;
             this.version.Text = "Ultimate Selaco Builder some version";
             // 
@@ -191,6 +192,7 @@ namespace CodeImp.DoomBuilder.Windows
             this.label2.Size = new System.Drawing.Size(343, 143);
             this.label2.TabIndex = 17;
             this.label2.Text = resources.GetString("label2.Text");
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // zdoomorglink
             // 

@@ -565,7 +565,7 @@ namespace CodeImp.DoomBuilder.Windows
 						configfile = General.AutoLoadConfig;
 
 					if (string.IsNullOrEmpty(configfile)) configfile = mapsettings.ReadSetting("gameconfig", "");
-					if(configfile.Trim().Length == 0)
+					if(configfile.Trim().Length == 0 || !General.ConfigurationInfoExist(configfile))
 					{
 						showdialog = true;
 					}
@@ -3616,6 +3616,9 @@ namespace CodeImp.DoomBuilder.Windows
 		[BeginAction("preferences")]
 		internal void ShowPreferences()
 		{
+			// Remember the old autostave state, so that we can enable/disable it
+			bool oldautosavestate = General.Settings.Autosave;
+
 			// Show preferences dialog
 			PreferencesForm prefform = new PreferencesForm();
 			if(prefform.ShowDialog(this) == DialogResult.OK)
@@ -3638,6 +3641,15 @@ namespace CodeImp.DoomBuilder.Windows
 					General.Map.Graphics.SetupSettings();
 					General.Map.UpdateConfiguration();
 					if(prefform.ReloadResources) General.Actions.InvokeAction("builder_reloadresources");
+
+					// Autosave stats was changed, so we have to enable or disable it
+					if(oldautosavestate != General.Settings.Autosave)
+					{
+						if (General.Settings.Autosave)
+							General.AutoSaver.InitializeTimer();
+						else
+							General.AutoSaver.StopTimer();
+					}
 				}
 				
 				// Redraw display
@@ -4646,6 +4658,9 @@ namespace CodeImp.DoomBuilder.Windows
 		//mxd
 		internal void ResetClock()
 		{
+			// Let the autosaver know that the clock is about to be reset
+			General.AutoSaver.BeforeClockReset();
+
 			Clock.Reset();
 			lastupdatetime = 0;
 			

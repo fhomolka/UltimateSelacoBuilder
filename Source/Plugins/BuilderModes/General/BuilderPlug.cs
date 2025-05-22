@@ -150,6 +150,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		private bool useoppositesmartpivothandle;
 		private bool selectchangedafterundoredo;
 		private bool selectadjacentvisualvertexslopehandles;
+		private bool usebuggyfloodselect;
 
 		#endregion
 
@@ -211,6 +212,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		public bool UseOppositeSmartPivotHandle { get { return useoppositesmartpivothandle; } internal set { useoppositesmartpivothandle = value; } }
 		public bool SelectChangedafterUndoRedo { get { return selectchangedafterundoredo; } internal set { selectchangedafterundoredo = value; } }
 		public bool SelectAdjacentVisualVertexSlopeHandles { get { return selectadjacentvisualvertexslopehandles; } internal set { selectadjacentvisualvertexslopehandles = value; } }
+		public bool UseBuggyFloodSelect { get { return usebuggyfloodselect; } internal set { usebuggyfloodselect = value; } }
 
 		//mxd. "Make Door" action persistent settings
 		internal MakeDoorSettings MakeDoor;
@@ -324,6 +326,7 @@ namespace CodeImp.DoomBuilder.BuilderModes
 			eventlinedistinctcolors = General.Settings.ReadPluginSetting("eventlinedistinctcolors", true);
 			useoppositesmartpivothandle = General.Settings.ReadPluginSetting("useoppositesmartpivothandle", true);
 			selectchangedafterundoredo = General.Settings.ReadPluginSetting("selectchangedafterundoredo", false);
+			usebuggyfloodselect = General.Settings.ReadPluginSetting("usebuggyfloodselect", false);
 		}
 
 		//mxd. Load settings, which can be changed via UI
@@ -678,9 +681,6 @@ namespace CodeImp.DoomBuilder.BuilderModes
 		[BeginAction("exporttoimage")]
 		private void ExportToImage()
 		{
-			// Convert geometry selection to sectors
-			General.Map.Map.ConvertSelection(SelectionType.Sectors);
-
 			// Get sectors
 			ICollection<Sector> sectors = General.Map.Map.SelectedSectorsCount == 0 ? General.Map.Map.Sectors : General.Map.Map.GetSelectedSectors(true);
 			if (sectors.Count == 0)

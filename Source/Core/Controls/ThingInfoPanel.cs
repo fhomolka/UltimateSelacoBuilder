@@ -109,6 +109,18 @@ namespace CodeImp.DoomBuilder.Controls
 			labelclass.Enabled = displayclassname; //mxd
 			classname.Enabled = displayclassname; //mxd
 			classname.Text = (displayclassname ? ti.ClassName : "--"); //mxd
+
+			string lowerClass = ti.ClassName.ToLower();
+			if(lowerClass == "pathnode" || lowerClass == "doornode")
+			{
+				int nodeid = t.Fields.GetValue("user_nodeid", -1);
+				if (nodeid < 0) nodeid = (int)t.Fields.GetValue("user_nodeid", -1.0);
+				if(nodeid >= 0)
+				{
+					type.Text += " #" + nodeid;
+				}
+			}
+
 			position.Text = t.Position.x.ToString(CultureInfo.InvariantCulture) + ", " + t.Position.y.ToString(CultureInfo.InvariantCulture) + ", " + zinfo;
 			tag.Text = t.Tag + (General.Map.Options.TagLabels.ContainsKey(t.Tag) ? " - " + General.Map.Options.TagLabels[t.Tag] : string.Empty);
 			angle.Text = t.AngleDoom + "\u00B0";

@@ -99,7 +99,7 @@ namespace CodeImp.DoomBuilder.Config
 			// Read
 			string istr = argindex.ToString(CultureInfo.InvariantCulture);
 			this.used = cfg.SettingExists(argspath + ".arg" + istr);
-			this.title = cfg.ReadSetting(argspath + ".arg" + istr + ".title", "Argument " + (argindex + 1));
+			this.title = cfg.ReadSetting(argspath + ".arg" + istr + ".title", "arg[" + (argindex) + "]");
 			this.tooltip = cfg.ReadSetting(argspath + ".arg" + istr + ".tooltip", string.Empty); //mxd
 			this.type = cfg.ReadSetting(argspath + ".arg" + istr + ".type", 0);
             this.str = cfg.ReadSetting(argspath + ".arg" + istr + ".str", false);
@@ -400,7 +400,7 @@ namespace CodeImp.DoomBuilder.Config
 		internal ArgumentInfo(int argindex)
 		{
 			this.used = false;
-			this.title = "Argument " + (argindex + 1);
+			this.title = "arg[" + argindex + "]";
 			this.type = 0;
 			this.enumlist = new EnumList();
 			this.flagslist = new EnumList(); //mxd

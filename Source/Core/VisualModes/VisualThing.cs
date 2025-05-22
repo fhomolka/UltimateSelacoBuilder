@@ -26,7 +26,7 @@ using CodeImp.DoomBuilder.Map;
 using CodeImp.DoomBuilder.Rendering;
 using Plane = CodeImp.DoomBuilder.Geometry.Plane;
 using CodeImp.DoomBuilder.GZBuilder;
-using CodeImp.DoomBuilder.GZBuilder.MD3;
+using CodeImp.DoomBuilder.GZBuilder.Models;
 
 #endregion
 
@@ -679,7 +679,7 @@ namespace CodeImp.DoomBuilder.VisualModes
                     if (ld.LightDef != GZGeneral.LightDef.POINT_SUBTRACTIVE) // normal, additive, attenuated
                     {
 						// ZDRay static lights have an intensity that's set through the thing's alpha value
-						float intensity = ld.LightRenderStyle == GZGeneral.LightRenderStyle.STATIC ? (float)thing.Fields.GetValue("alpha", 1.0) : 1.0f;
+						float intensity = ld.LightRenderStyle == GZGeneral.LightRenderStyle.LIGHTMAP ? (float)thing.Fields.GetValue("alpha", 1.0) : 1.0f;
 
                         //lightColor.Alpha used in shader to perform some calculations based on light type
                         lightColor = new Color4(
@@ -718,7 +718,7 @@ namespace CodeImp.DoomBuilder.VisualModes
                     if (ld.LightDef != GZGeneral.LightDef.SPOT_SUBTRACTIVE)
                     {
 						// ZDRay static lights have an intensity that's set through the thing's alpha value
-						float intensity = ld.LightRenderStyle == GZGeneral.LightRenderStyle.STATIC ? (float)thing.Fields.GetValue("alpha", 1.0) : 1.0f;
+						float intensity = ld.LightRenderStyle == GZGeneral.LightRenderStyle.LIGHTMAP ? (float)thing.Fields.GetValue("alpha", 1.0) : 1.0f;
 
 						lightColor = new Color4(
                             c1 / DYNLIGHT_INTENSITY_SCALER * intensity,

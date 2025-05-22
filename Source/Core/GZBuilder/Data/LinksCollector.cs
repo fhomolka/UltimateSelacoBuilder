@@ -28,6 +28,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 			public readonly List<Thing> PathFollowers;
 			public readonly Dictionary<int, List<Thing>> PolyobjectAnchors; //angle, list of PolyobjectAnchors
 			public readonly Dictionary<int, List<Thing>> PolyobjectStartSpots; //angle, list of PolyobjectStartSpots
+			public readonly Dictionary<int, Thing> PathNodes;
 
 			public SpecialThings()
 			{
@@ -41,6 +42,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 				PathFollowers = new List<Thing>();
 				PolyobjectAnchors = new Dictionary<int, List<Thing>>();
 				PolyobjectStartSpots = new Dictionary<int, List<Thing>>();
+				PathNodes = new Dictionary<int, Thing>();
 			}
 		}
 
@@ -165,7 +167,15 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 					case "patrolspecial":
 						result.PatrolSpecials.Add(t);
 						break;
-
+					case "pathnode":
+					case "doornode":
+						int nodeid = t.Fields.GetValue("user_nodeid", -1);
+						if (nodeid < 0) nodeid = (int)t.Fields.GetValue("user_nodeid", -1.0);
+						if (nodeid >= 0 && !result.PathNodes.ContainsKey(nodeid))
+						{
+							result.PathNodes.Add(nodeid, t);
+						}
+						break;
 					case "$polyanchor":
 						if(!result.PolyobjectAnchors.ContainsKey(t.AngleDoom)) result.PolyobjectAnchors[t.AngleDoom] = new List<Thing>();
 						result.PolyobjectAnchors[t.AngleDoom].Add(t);
@@ -387,9 +397,30 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 				}
 			}
 
+			// Process pathnodes
+			foreach (KeyValuePair<int, Thing> t in result.PathNodes)
+			{
+				Thing tt = t.Value;
+				start = tt.Position;
+				start.z += GetCorrectHeight(tt, blockmap, true);
+
+				for(int x = 0; x < 8; x++)
+				{
+					int targetID = tt.Fields.GetValue("user_connection" + (x + 1), -1);
+					if(targetID < 0) targetID = (int)tt.Fields.GetValue("user_connection" + (x + 1), -1.0);
+					if (targetID >= 0 && result.PathNodes.ContainsKey(targetID))
+					{
+						Thing endNode = result.PathNodes[targetID];
+						end = endNode.Position;
+						end.z += GetCorrectHeight(endNode, blockmap, true);
+						lines.Add(new Line3D(start, end, General.Colors.InfoLine.WithAlpha(180)));
+					}
+				}
+			}
+
 			// Process interpolation points [CAN BE INTERPOLATED]
 			// 1. Connect PathNodes
-			foreach(KeyValuePair<int, List<PathNode>> group in result.InterpolationPoints)
+			foreach (KeyValuePair<int, List<PathNode>> group in result.InterpolationPoints)
 			{
 				foreach(PathNode node in group.Value)
 				{
@@ -579,7 +610,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
                         color = new PixelColor((byte)linealpha, (byte)t.Args[1], (byte)t.Args[2], (byte)t.Args[3]);
                         break;
 
-					case GZGeneral.LightDef.POINT_STATIC:
+					case GZGeneral.LightDef.POINT_LIGHTMAP:
 						// ZDRay static lights have an intensity that's set through the thing's alpha value
 						double intensity = t.Fields.GetValue("alpha", 1.0);
 						byte r = (byte)General.Clamp(t.Args[0] * intensity, 0.0, 255.0);
@@ -622,7 +653,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
             else color = new PixelColor((byte)linealpha, (byte)((t.Args[0] & 0xFF0000) >> 16), (byte)((t.Args[0] & 0x00FF00) >> 8), (byte)((t.Args[0] & 0x0000FF)));
 
 			// ZDRay static lights have an intensity that's set through the thing's alpha value
-			if (t.DynamicLightType.LightDef == GZGeneral.LightDef.SPOT_STATIC)
+			if (t.DynamicLightType.LightDef == GZGeneral.LightDef.SPOT_LIGHTMAP)
 			{
 				double intensity = t.Fields.GetValue("alpha", 1.0);
 				if (intensity != 1.0)

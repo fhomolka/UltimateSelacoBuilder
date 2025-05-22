@@ -127,7 +127,8 @@
     <value>False</value>
   </metadata>
   <data name="label2.Text" xml:space="preserve">
-    <value>Ultimate Selaco Builder contributors:
+    <value>Ultimate Selaco Builder is a flavour of Ultimate Doom Builder!
+ Ultimate Doom Builder contributors:
 
  • boris (Ultimate Doom Builder)
  • ZZYZX (Ultimate Doom Builder)
@@ -137,6 +138,6 @@
  • anotak (performance optimizations)
 
 And others; for the full list consider looking at the project's GitHub page.
-Background image is by Zanieon.</value>
+</value>
   </data>
 </root>

@@ -42,6 +42,7 @@
             this.arg3 = new CodeImp.DoomBuilder.Controls.ArgumentBox();
             this.arg4 = new CodeImp.DoomBuilder.Controls.ArgumentBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.splitcontainer)).BeginInit();
             this.splitcontainer.Panel1.SuspendLayout();
             this.splitcontainer.Panel2.SuspendLayout();
             this.splitcontainer.SuspendLayout();
@@ -133,7 +134,7 @@
             this.arg0label.Name = "arg0label";
             this.arg0label.Size = new System.Drawing.Size(179, 14);
             this.arg0label.TabIndex = 33;
-            this.arg0label.Text = "Argument 1:";
+            this.arg0label.Text = "args[0] :";
             this.arg0label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.arg0label.UseMnemonic = false;
             // 
@@ -144,7 +145,7 @@
             this.arg1label.Name = "arg1label";
             this.arg1label.Size = new System.Drawing.Size(179, 14);
             this.arg1label.TabIndex = 42;
-            this.arg1label.Text = "Argument 2:";
+            this.arg1label.Text = "args[1] :";
             this.arg1label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.arg1label.UseMnemonic = false;
             // 
@@ -155,7 +156,7 @@
             this.arg2label.Name = "arg2label";
             this.arg2label.Size = new System.Drawing.Size(179, 14);
             this.arg2label.TabIndex = 43;
-            this.arg2label.Text = "Argument 3:";
+            this.arg2label.Text = "args[2] :";
             this.arg2label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.arg2label.UseMnemonic = false;
             // 
@@ -190,7 +191,7 @@
             this.arg3label.Name = "arg3label";
             this.arg3label.Size = new System.Drawing.Size(179, 14);
             this.arg3label.TabIndex = 44;
-            this.arg3label.Text = "Argument 4:";
+            this.arg3label.Text = "args[3] :";
             this.arg3label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.arg3label.UseMnemonic = false;
             // 
@@ -201,7 +202,7 @@
             this.arg4label.Name = "arg4label";
             this.arg4label.Size = new System.Drawing.Size(179, 14);
             this.arg4label.TabIndex = 46;
-            this.arg4label.Text = "Argument 5:";
+            this.arg4label.Text = "args[4] :";
             this.arg4label.TextAlign = System.Drawing.ContentAlignment.TopRight;
             this.arg4label.UseMnemonic = false;
             // 
@@ -231,6 +232,7 @@
             this.splitcontainer.Panel1.ResumeLayout(false);
             this.splitcontainer.Panel1.PerformLayout();
             this.splitcontainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitcontainer)).EndInit();
             this.splitcontainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
