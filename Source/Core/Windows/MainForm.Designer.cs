@@ -160,6 +160,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.toggleFilter = new System.Windows.Forms.ToolStripMenuItem();
 			this.toggleViewModes = new System.Windows.Forms.ToolStripMenuItem();
 			this.toggleGeometry = new System.Windows.Forms.ToolStripMenuItem();
+			this.toggleLightmaps = new System.Windows.Forms.ToolStripMenuItem();
 			this.toggleTesting = new System.Windows.Forms.ToolStripMenuItem();
 			this.toggleRendering = new System.Windows.Forms.ToolStripMenuItem();
 			this.buttonnewmap = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
@@ -230,6 +231,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttontogglevisualvertices = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.separatorgzmodes = new System.Windows.Forms.ToolStripSeparator();
 			this.buttontest = new System.Windows.Forms.ToolStripSplitButton();
+			this.buttonbuildlightmaps = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.seperatortesting = new System.Windows.Forms.ToolStripSeparator();
 			this.statusbar = new System.Windows.Forms.StatusStrip();
 			this.statuslabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -1404,8 +1406,9 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttontoggleeventlines,
 			this.buttontogglevisualvertices,
 			this.separatorgzmodes,
-			this.buttontest,
-			this.seperatortesting});
+			this.buttonbuildlightmaps,
+			this.seperatortesting,
+			this.buttontest});
 			this.toolbar.Location = new System.Drawing.Point(0, 24);
 			this.toolbar.Name = "toolbar";
 			this.toolbar.Size = new System.Drawing.Size(1012, 25);
@@ -1422,6 +1425,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.toggleFilter,
 			this.toggleViewModes,
 			this.toggleGeometry,
+			this.toggleLightmaps,
 			this.toggleTesting,
 			this.toggleRendering});
 			this.toolbarContextMenu.Name = "toolbarContextMenu";
@@ -1485,6 +1489,13 @@ namespace CodeImp.DoomBuilder.Windows
 			this.toggleGeometry.Size = new System.Drawing.Size(226, 22);
 			this.toggleGeometry.Text = "Snap / Merge";
 			this.toggleGeometry.Click += new System.EventHandler(this.toggleGeometry_Click);
+			// 
+			// toggleLightmaps
+			// 
+			this.toggleLightmaps.Name = "toggleLightmaps";
+			this.toggleLightmaps.Size = new System.Drawing.Size(226, 22);
+			this.toggleLightmaps.Text = "Lightmaps";
+			this.toggleLightmaps.Click += new System.EventHandler(this.toggleLightmaps_Click);
 			// 
 			// toggleTesting
 			// 
@@ -2226,6 +2237,22 @@ namespace CodeImp.DoomBuilder.Windows
 			this.separatorgzmodes.Name = "separatorgzmodes";
 			this.separatorgzmodes.Size = new System.Drawing.Size(6, 25);
 			// 
+			// buttonbuildlightmaps
+			// 
+			this.buttonbuildlightmaps.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttonbuildlightmaps.Image = global::CodeImp.DoomBuilder.Properties.Resources.Light;
+			this.buttonbuildlightmaps.Name = "buttonbuildlightmaps";
+			this.buttonbuildlightmaps.Size = new System.Drawing.Size(23, 22);
+			this.buttonbuildlightmaps.Tag = "builder_buildlightmaps";
+			this.buttonbuildlightmaps.Text = "Build Lightmaps";
+			this.buttonbuildlightmaps.Click += new System.EventHandler(this.InvokeTaggedAction);
+			// 
+			// seperatortesting
+			// 
+			this.seperatortesting.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+			this.seperatortesting.Name = "seperatortesting";
+			this.seperatortesting.Size = new System.Drawing.Size(6, 25);
+			// 
 			// buttontest
 			// 
 			this.buttontest.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -2236,12 +2263,6 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttontest.Tag = "builder_testmap";
 			this.buttontest.Text = "Test Map";
 			this.buttontest.ButtonClick += new System.EventHandler(this.InvokeTaggedAction);
-			// 
-			// seperatortesting
-			// 
-			this.seperatortesting.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-			this.seperatortesting.Name = "seperatortesting";
-			this.seperatortesting.Size = new System.Drawing.Size(6, 25);
 			// 
 			// statusbar
 			// 
@@ -2977,6 +2998,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemgridsetup;
 		private System.Windows.Forms.Timer statusflasher;
 		private System.Windows.Forms.ToolStripSplitButton buttontest;
+		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonbuildlightmaps;
 		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoncut;
 		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoncopy;
 		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonpaste;
@@ -3073,6 +3095,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem toggleFilter;
 		private System.Windows.Forms.ToolStripMenuItem toggleViewModes;
 		private System.Windows.Forms.ToolStripMenuItem toggleGeometry;
+		private System.Windows.Forms.ToolStripMenuItem toggleLightmaps;
 		private System.Windows.Forms.ToolStripMenuItem toggleTesting;
 		private System.Windows.Forms.ToolStripMenuItem toggleRendering;
 		private System.Windows.Forms.ToolStripSeparator separatortoolsscreenshots;

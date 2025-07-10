@@ -83,6 +83,7 @@ namespace CodeImp.DoomBuilder.Config
 		private bool toolbarfilter;
 		private bool toolbarviewmodes;
 		private bool toolbargeometry;
+		private bool toolbarlightmaps;
 		private bool toolbartesting;
 		private bool toolbarfile;
 		private float filteranisotropy;
@@ -208,6 +209,7 @@ namespace CodeImp.DoomBuilder.Config
 		public bool ToolbarFilter { get { return toolbarfilter; } internal set { toolbarfilter = value; } }
 		public bool ToolbarViewModes { get { return toolbarviewmodes; } internal set { toolbarviewmodes = value; } }
 		public bool ToolbarGeometry { get { return toolbargeometry; } internal set { toolbargeometry = value; } }
+		public bool ToolbarLightmaps { get { return toolbarlightmaps; } internal set { toolbarlightmaps = value; } }
 		public bool ToolbarTesting { get { return toolbartesting; } internal set { toolbartesting = value; } }
 		public bool ToolbarFile { get { return toolbarfile; } internal set { toolbarfile = value; } }
 		public float FilterAnisotropy { get { return filteranisotropy; } internal set { filteranisotropy = value; } }
@@ -369,6 +371,7 @@ namespace CodeImp.DoomBuilder.Config
 				toolbarfilter = cfg.ReadSetting("toolbarfilter", true);
 				toolbarviewmodes = cfg.ReadSetting("toolbarviewmodes", true);
 				toolbargeometry = cfg.ReadSetting("toolbargeometry", true);
+				toolbarlightmaps = cfg.ReadSetting("toolbarlightmaps", true);
 				toolbartesting = cfg.ReadSetting("toolbartesting", true);
 				toolbarfile = cfg.ReadSetting("toolbarfile", true);
 				filteranisotropy = General.Clamp(cfg.ReadSetting("filteranisotropy", 16.0f), 1.0f, 16.0f);
@@ -519,6 +522,7 @@ namespace CodeImp.DoomBuilder.Config
 			cfg.WriteSetting("toolbarfilter", toolbarfilter);
 			cfg.WriteSetting("toolbarviewmodes", toolbarviewmodes);
 			cfg.WriteSetting("toolbargeometry", toolbargeometry);
+			cfg.WriteSetting("toolbarlightmaps", toolbarlightmaps);
 			cfg.WriteSetting("toolbartesting", toolbartesting);
 			cfg.WriteSetting("toolbarfile", toolbarfile);
 			cfg.WriteSetting("filteranisotropy", filteranisotropy);

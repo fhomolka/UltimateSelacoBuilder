@@ -2194,6 +2194,7 @@ namespace CodeImp.DoomBuilder.Windows
 			buttonsplitjoinedsectors.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
 			buttonsplitjoinedsectors.Checked = General.Settings.SplitJoinedSectors; //mxd
 			buttonautoclearsidetextures.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
+			buttonbuildlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
 			buttontest.Visible = General.Settings.ToolbarTesting && maploaded;
 			buttontoggleclassicrendering.Visible = General.Settings.ToolbarViewModes && maploaded;
 
@@ -2413,6 +2414,7 @@ namespace CodeImp.DoomBuilder.Windows
 			toggleFilter.Image = General.Settings.ToolbarFilter ? Resources.Check : null;
 			toggleViewModes.Image = General.Settings.ToolbarViewModes ? Resources.Check : null;
 			toggleGeometry.Image = General.Settings.ToolbarGeometry ? Resources.Check : null;
+			toggleLightmaps.Image = General.Settings.ToolbarLightmaps ? Resources.Check : null;
 			toggleTesting.Image = General.Settings.ToolbarTesting ? Resources.Check : null;
 			toggleRendering.Image = General.Settings.GZToolbarGZDoom ? Resources.Check : null;
 		}
@@ -2502,6 +2504,15 @@ namespace CodeImp.DoomBuilder.Windows
 
 			if(toolbarContextMenuShiftPressed) 
 				toggleGeometry.Image = General.Settings.ToolbarGeometry ? Resources.Check : null;
+		}
+
+		private void toggleLightmaps_Click(object sender, EventArgs e)
+		{
+			General.Settings.ToolbarLightmaps = !General.Settings.ToolbarLightmaps;
+			UpdateToolbar();
+
+			if (toolbarContextMenuShiftPressed)
+				toggleLightmaps.Image = General.Settings.ToolbarLightmaps ? Resources.Check : null;
 		}
 
 		private void toggleTesting_Click(object sender, EventArgs e) 
@@ -3347,6 +3358,13 @@ namespace CodeImp.DoomBuilder.Windows
 			General.MainWindow.DisplayStatus(StatusType.Action, "Visual vertices are " + (General.Settings.GZShowVisualVertices ? "ENABLED" : "DISABLED"));
 			General.MainWindow.RedrawDisplay();
 			General.MainWindow.UpdateGZDoomPanel();
+		}
+
+		[BeginAction("buildlightmaps")]
+		internal void BuildLightmaps()
+		{
+			// TODO: Actually do stuff needed for lightmapping
+			General.ToastManager.ShowToast("gztoggleeventlines", ToastType.INFO, "Ah ah ah!", "Not yet, boyo!", "Nup");
 		}
 
 		#endregion
