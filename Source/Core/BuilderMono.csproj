@@ -301,6 +301,12 @@
     <Compile Include="Rendering\VertexBuffer.cs" />
     <Compile Include="Rendering\VisualSlopeHandle.cs" />
     <Compile Include="VisualModes\VisualSlope.cs" />
+    <Compile Include="Windows\LightmapProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\LightmapProgressForm.Designer.cs">
+      <DependentUpon>LightmapProgressForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Windows\PreAndPostCommandsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -704,6 +710,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ToastControl.resx">
       <DependentUpon>ToastControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Windows\LightmapProgressForm.resx">
+      <DependentUpon>LightmapProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\PreAndPostCommandsForm.resx">
       <DependentUpon>PreAndPostCommandsForm.cs</DependentUpon>

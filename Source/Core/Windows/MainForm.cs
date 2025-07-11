@@ -2194,7 +2194,7 @@ namespace CodeImp.DoomBuilder.Windows
 			buttonsplitjoinedsectors.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
 			buttonsplitjoinedsectors.Checked = General.Settings.SplitJoinedSectors; //mxd
 			buttonautoclearsidetextures.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
-			buttonbuildlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
+			//buttonbuildlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
 			buttontest.Visible = General.Settings.ToolbarTesting && maploaded;
 			buttontoggleclassicrendering.Visible = General.Settings.ToolbarViewModes && maploaded;
 
@@ -3363,8 +3363,29 @@ namespace CodeImp.DoomBuilder.Windows
 		[BeginAction("buildlightmaps")]
 		internal void BuildLightmaps()
 		{
-			// TODO: Actually do stuff needed for lightmapping
-			General.ToastManager.ShowToast("gztoggleeventlines", ToastType.INFO, "Ah ah ah!", "Not yet, boyo!", "Nup");
+			//if (General.Map == null)
+			//{
+			//	return;
+			//}
+
+			if (General.Map != null && General.Map.MapSaveRequired(General.Map.FilePathName, SavePurpose.Normal))
+			{
+				string caption = "Save Map changes for Lightmapping";
+				string message = "Changes need to be saved before processing lightmaps. Would you like to save now?";
+
+				DialogResult result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+				if (result == DialogResult.Yes)
+				{
+					General.SaveMap();
+				}
+				else
+				{
+					return;
+				}
+			}
+
+			ShowLightmapBuilder();
 		}
 
 		#endregion
@@ -4442,6 +4463,26 @@ namespace CodeImp.DoomBuilder.Windows
 				General.Map.Map.Update();
 				RedrawDisplay();
 			}
+		}
+
+		public DialogResult ShowLightmapBuilder()
+		{
+			DialogResult result;
+			LightmapProgressForm f = new LightmapProgressForm();
+			DisableProcessing(); //mxd
+#if NO_WIN32
+			BreakExclusiveMouseInput();
+			f.Closed += (object sender, EventArgs e) => {
+				ResumeExclusiveMouseInput();
+				EnableProcessing(); //mxd
+			};
+#else
+			EnableProcessing(); //mxd
+#endif
+			result = f.ShowDialog(this);
+			f.Dispose();
+
+			return result;
 		}
 
         #endregion
