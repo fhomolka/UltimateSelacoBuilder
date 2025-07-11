@@ -62,7 +62,7 @@ namespace CodeImp.DoomBuilder.Windows
 			m_BuildProcess = new System.Diagnostics.Process();
 			m_BuildProcess.StartInfo.FileName = "C:\\Projects\\ZDRay\\out\\build\\x64-Release\\zdray.exe"; // TODO: The location of zdray should come from settings
 			m_BuildProcess.StartInfo.Arguments =
-				"--from-editor " +
+				"--udbmode " +
 				"--output=\"C:\\Projects\\SelacoData\\Files\\Maps\\LightmapTest.wad\" " +
 				"\"C:\\Projects\\SelacoData\\Files\\MAPS\\SE_01b-StaticLights.wad\"";
 			m_BuildProcess.StartInfo.CreateNoWindow = true;
