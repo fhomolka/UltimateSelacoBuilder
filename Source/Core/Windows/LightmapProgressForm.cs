@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,10 +62,7 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 			m_BuildProcess = new System.Diagnostics.Process();
 			m_BuildProcess.StartInfo.FileName = "C:\\Projects\\ZDRay\\out\\build\\x64-Release\\zdray.exe"; // TODO: The location of zdray should come from settings
-			m_BuildProcess.StartInfo.Arguments =
-				"--udbmode " +
-				"--output=\"C:\\Projects\\SelacoData\\Files\\Maps\\LightmapTest.wad\" " +
-				"\"C:\\Projects\\SelacoData\\Files\\MAPS\\SE_01b-StaticLights.wad\"";
+			m_BuildProcess.StartInfo.Arguments = $"--udbmode \"{General.Map.FilePathName}\"";
 			m_BuildProcess.StartInfo.CreateNoWindow = true;
 			m_BuildProcess.StartInfo.UseShellExecute = false;
 			m_BuildProcess.StartInfo.RedirectStandardOutput = true;
@@ -98,11 +96,11 @@ namespace CodeImp.DoomBuilder.Windows
 			// Just throw the message directly to the output
 			if (message.StartsWith("ERROR: "))
 			{
-				textboxoutput.SelectionColor = Color.Red;
+				PrintOutputMessage(message, Color.Red);
 			}
 			else if (message.StartsWith("WARNING: "))
 			{
-				textboxoutput.SelectionColor = Color.Yellow;
+				PrintOutputMessage(message, Color.Yellow);
 			}
 			else if (message.StartsWith("STAT:"))
 			{
@@ -115,9 +113,69 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private void OnProcessExited()
 		{
-			progressbar.Value = 100;
-			labelprogress.Text = "Lightmap rendered successfully!";
-			buttoncancel.Text = "Close";
+			if (!m_HasErrors)
+			{
+				progressbar.Value = 98;
+
+				if (LoadLightmapData())
+				{
+					progressbar.Value = 100;
+					labelprogress.Text = "Lightmap rendered successfully!";
+					PrintOutputMessage("Lightmap rendered successfully!", Color.Green);
+
+					Close();
+				}
+				else
+				{
+					m_HasErrors = true;
+				}
+			}
+
+			if (m_HasErrors)
+			{
+				progressbar.Value = 0;
+				PrintOutputMessage("\nBuild exited with errors", Color.Red);
+				buttoncancel.Text = "Close";
+			}
+		}
+
+		private bool LoadLightmapData()
+		{
+			labelprogress.Text = "Copying data to UDB...";
+			PrintOutputMessage("Copying data to UDB...");
+
+			string lightmapPath = General.Map.FilePathName + ".lightmap.lmp";
+			string lightgroupPath = General.Map.FilePathName + ".lightgrp.lmp";
+
+			if (!File.Exists(lightmapPath))
+			{
+				ProcessOutput($"ERROR: Failed to load LIGHTMAP lump from file: {lightmapPath}");
+				return false;
+			}
+
+			if (!File.Exists(lightgroupPath))
+			{
+				ProcessOutput($"ERROR: Failed to load LIGHTGRP lump from file: {lightgroupPath}");
+				return false;
+			}
+
+			Byte[] lightmapData = File.ReadAllBytes(lightmapPath);
+			Byte[] lightgroupData = File.ReadAllBytes(lightgroupPath);
+
+			// Copy the lumps into our currently loaded map file
+			General.Map.SetLumpData("LIGHTMAP", new MemoryStream(lightmapData));
+			General.Map.SetLumpData("LIGHTGRP", new MemoryStream(lightgroupData));
+
+			// The .lmp files are only supposed to be temporary, so delete them now that we're done
+			File.Delete(lightmapPath);
+			File.Delete(lightgroupPath);
+
+			labelprogress.Text = "Saving map file...";
+			PrintOutputMessage("Saving map file...");
+
+			General.Map.SaveMap(General.Map.FilePathName, SavePurpose.NoAutoSave); // Don't make an autosave on this step, since we already have one from the initial save
+
+			return true;
 		}
 
 		private void ProcessStatMessage(string message, string[] args)
@@ -130,7 +188,7 @@ namespace CodeImp.DoomBuilder.Windows
 			else if (message == "GatherTasksUpdate" && args.Length == 2)
 			{
 				UInt64 tasksComplete = UInt64.Parse(args[0]);
-				progressbar.Value = LerpPercent(tasksComplete, m_GatherTasks, GatherTasksStartPercent, GatherTasksEndPercent);
+				progressbar.Value = TaskPercent(tasksComplete, m_GatherTasks, GatherTasksStartPercent, GatherTasksEndPercent);
 
 				labelprogress.Text = $"Gathering tasks: {tasksComplete} / {m_GatherTasks}";
 			}
@@ -148,7 +206,7 @@ namespace CodeImp.DoomBuilder.Windows
 			else if (message == "RaytraceUpdate" && args.Length == 2)
 			{
 				UInt64 tasksComplete = UInt64.Parse(args[0]);
-				progressbar.Value = LerpPercent(tasksComplete, m_RaytraceTasks, RaytraceStartPercent, RaytraceEndPercent);
+				progressbar.Value = TaskPercent(tasksComplete, m_RaytraceTasks, RaytraceStartPercent, RaytraceEndPercent);
 
 				labelprogress.Text = $"Raytracing: {tasksComplete} / {m_RaytraceTasks} tasks complete";
 			}
@@ -162,13 +220,11 @@ namespace CodeImp.DoomBuilder.Windows
 			{
 				labelprogress.Text = args[0];
 
-				textboxoutput.SelectionColor = textboxoutput.ForeColor;
-				textboxoutput.SelectedText = args[0] + Environment.NewLine;
+				PrintOutputMessage(args[0]);
 			}
 			else if (message == "Message" && args.Length == 1)
 			{
-				textboxoutput.SelectionColor = textboxoutput.ForeColor;
-				textboxoutput.SelectedText = args[0] + Environment.NewLine;
+				PrintOutputMessage(args[0]);
 			}
 			else
 			{
@@ -179,14 +235,19 @@ namespace CodeImp.DoomBuilder.Windows
 					debugOutput += "|" + str;
 				}
 
-				textboxoutput.SelectionColor = Color.Cyan;
-				textboxoutput.SelectedText = debugOutput;
+				PrintOutputMessage(debugOutput, Color.Cyan);
 			}
 		}
 
-		private Int32 LerpPercent(UInt64 value, UInt64 valueMax, int from, int to)
+		void PrintOutputMessage(string message, Color color = default(Color))
 		{
-			return (Int32)((value / (double)valueMax) * (to - from)) + from;
+			textboxoutput.SelectionColor = color == default(Color) ? textboxoutput.ForeColor : color;
+			textboxoutput.SelectedText = message + Environment.NewLine;
+		}
+
+		private Int32 TaskPercent(UInt64 tasksComplete, UInt64 tasksCount, int fromPercent, int toPercent)
+		{
+			return (Int32)((tasksComplete / (double)tasksCount) * (toPercent - fromPercent)) + fromPercent;
 		}
 
 		delegate void ProcessOutputCallback(string message);
@@ -197,6 +258,7 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private UInt64 m_GatherTasks = 0;
 		private UInt64 m_RaytraceTasks = 0;
+		private bool m_HasErrors = false;
 
 		const int GatherTasksStartPercent = 5;
 		const int GatherTasksEndPercent = 20;

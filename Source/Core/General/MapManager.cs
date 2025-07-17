@@ -996,7 +996,7 @@ namespace CodeImp.DoomBuilder
 								File.Move($"{autosavefilepathname}.autosave{i}", $"{autosavefilepathname}.autosave{i + 1}");
 						}
 					}
-					else
+					else if (purpose != SavePurpose.NoAutoSave)
 					{
 						// Backup existing file, if any
 						if (File.Exists(newfilepathname + ".backup3")) File.Delete(newfilepathname + ".backup3");
