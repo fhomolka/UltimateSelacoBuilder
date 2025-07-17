@@ -61,7 +61,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private void StartZDRay()
 		{
 			m_BuildProcess = new System.Diagnostics.Process();
-			m_BuildProcess.StartInfo.FileName = "C:\\Projects\\ZDRay\\out\\build\\x64-Release\\zdray.exe"; // TODO: The location of zdray should come from settings
+			m_BuildProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), "zdray.exe"); // TODO: The location of zdray should come from settings
 			m_BuildProcess.StartInfo.Arguments = $"--udbmode \"{General.Map.FilePathName}\"";
 			m_BuildProcess.StartInfo.CreateNoWindow = true;
 			m_BuildProcess.StartInfo.UseShellExecute = false;
