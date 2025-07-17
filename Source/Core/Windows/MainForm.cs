@@ -2194,7 +2194,7 @@ namespace CodeImp.DoomBuilder.Windows
 			buttonsplitjoinedsectors.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
 			buttonsplitjoinedsectors.Checked = General.Settings.SplitJoinedSectors; //mxd
 			buttonautoclearsidetextures.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
-			//buttonbuildlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
+			buttonbuildlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
 			buttontest.Visible = General.Settings.ToolbarTesting && maploaded;
 			buttontoggleclassicrendering.Visible = General.Settings.ToolbarViewModes && maploaded;
 
