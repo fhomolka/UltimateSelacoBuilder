@@ -424,8 +424,10 @@ namespace CodeImp.DoomBuilder.Windows
 
 		void PrintOutputMessage(string message, Color color = default(Color))
 		{
+			textboxoutput.Select(textboxoutput.Text.Length, 0);
 			textboxoutput.SelectionColor = color == default(Color) ? textboxoutput.ForeColor : color;
 			textboxoutput.SelectedText = message + Environment.NewLine;
+			textboxoutput.ScrollToCaret();
 		}
 
 		private Int32 TaskPercent(UInt64 tasksComplete, UInt64 tasksCount, int fromPercent, int toPercent)
