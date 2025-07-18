@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CodeImp.DoomBuilder.IO;
+using CodeImp.DoomBuilder.Map;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -159,8 +161,15 @@ namespace CodeImp.DoomBuilder.Windows
 				return false;
 			}
 
+			string lightgroupthingsPath = General.Map.FilePathName + ".lgroupthings.lmp";
+
 			Byte[] lightmapData = File.ReadAllBytes(lightmapPath);
 			Byte[] lightgroupData = File.ReadAllBytes(lightgroupPath);
+
+			if (!LoadLightGroupThings(lightgroupthingsPath))
+			{
+				return false;
+			}
 
 			// Copy the lumps into our currently loaded map file
 			General.Map.SetLumpData("LIGHTMAP", new MemoryStream(lightmapData));
@@ -169,6 +178,7 @@ namespace CodeImp.DoomBuilder.Windows
 			// The .lmp files are only supposed to be temporary, so delete them now that we're done
 			File.Delete(lightmapPath);
 			File.Delete(lightgroupPath);
+			File.Delete(lightgroupthingsPath);
 
 			labelprogress.Text = "Saving map file...";
 			PrintOutputMessage("Saving map file...");
@@ -176,6 +186,179 @@ namespace CodeImp.DoomBuilder.Windows
 			General.Map.SaveMap(General.Map.FilePathName, SavePurpose.NoAutoSave); // Don't make an autosave on this step, since we already have one from the initial save
 
 			return true;
+		}
+
+		private bool LoadLightGroupThings(string path)
+		{
+			if (!File.Exists(path))
+			{
+				ProcessOutput($"ERROR: Failed to load LightGroupThings, file not found: {path}");
+				return false;
+			}
+
+			string[] data = File.ReadAllLines(path);
+
+			UniversalParser textmap = new UniversalParser();
+			textmap.InputConfiguration(data);
+
+			// Check for errors
+			if (textmap.ErrorResult != 0)
+			{
+				ProcessOutput($"ERROR: Error on line {textmap.ErrorLine} while parsing LightGroupThings data:\n" + textmap.ErrorDescription);
+			}
+
+			if (textmap.HasWarnings)
+			{
+				foreach (string warning in textmap.Warnings)
+				{
+					ProcessOutput($"WARNING: {warning}");
+				}
+			}
+
+			List<Thing> oldLightGroups = new List<Thing>();
+
+			// Delete all existing LightGroups
+			foreach (Thing thing in General.Map.Map.Things)
+			{
+				if (thing.Type == 9899)
+				{
+					oldLightGroups.Add(thing);
+				}
+			}
+
+			General.Map.Map.BeginAddRemove();
+
+			foreach (Thing lightGroup in oldLightGroups)
+			{
+				lightGroup.Dispose();
+			}
+
+			oldLightGroups = null;
+
+			// Make list
+			foreach (UniversalEntry e in textmap.Root)
+			{
+				UniversalCollection uc = e.Value as UniversalCollection;
+				if (uc != null && e.Key == "thing")
+				{
+					string error = null;
+
+					int[] args = new int[Linedef.NUM_ARGS];
+					int tag = GetEntry<int>(uc, "id", ref error);
+					int type = GetEntry<int>(uc, "type", ref error);
+					int score = GetEntry<int>(uc, "score", ref error);
+					args[0] = GetEntry<int>(uc, "arg0", ref error);
+					args[1] = GetEntry<int>(uc, "arg1", ref error);
+					args[2] = GetEntry<int>(uc, "arg2", ref error);
+					bool dormant = GetEntry<bool>(uc, "dormant", ref error);
+					int animationType = GetEntry<int>(uc, "user_animationtype", ref error);
+					int animationInterval = GetEntry<int>(uc, "user_animationinterval", ref error);
+					double primaryIntensity = GetEntry<double>(uc, "user_primaryintensity", ref error);
+					double secondaryIntensity = GetEntry<double>(uc, "user_secondaryintensity", ref error);
+					bool allowColorChange = GetEntry<bool>(uc, "user_allowcolorchange", ref error);
+
+					if (error != null)
+					{
+						ProcessOutput($"ERROR: {error}");
+						General.Map.Map.EndAddRemove();
+						return false;
+					}
+
+					// Create new item
+					Thing t = General.Map.Map.CreateThing();
+					if (t != null)
+					{
+						General.Settings.ApplyDefaultThingSettings(t);
+						Dictionary<string, bool> flags = new Dictionary<string, bool>
+						{
+							{ "enabled", true },
+							{ "dormant", dormant },
+							{ "skill1", true },
+							{ "skill2", true },
+							{ "skill3", true },
+							{ "skill4", true },
+							{ "skill5", true },
+							{ "skill6", true },
+							{ "single", true },
+							{ "coop", true },
+						};
+
+						t.Update(type, 0, 0, 0, 0, 0, 0, 0, 0, flags, tag, 0, args);
+						AddUserField(t, "score", score);
+						AddUserField(t, "skill1", true);
+						AddUserField(t, "skill2", true);
+						AddUserField(t, "skill3", true);
+						AddUserField(t, "skill4", true);
+						AddUserField(t, "skill5", true);
+						AddUserField(t, "skill6", true);
+						AddUserField(t, "single", true);
+						AddUserField(t, "coop", true);
+						AddUserField(t, "user_animationType", animationType);
+						AddUserField(t, "user_animationInterval", animationInterval);
+						AddUserField(t, "user_primaryIntensity", primaryIntensity);
+						AddUserField(t, "user_secondaryIntensity", secondaryIntensity);
+						AddUserField(t, "allowColorChange", allowColorChange);
+						t.UpdateConfiguration();
+					}
+				}
+			}
+
+			General.Map.Map.EndAddRemove();
+			General.Map.Map.Update();
+			General.Map.ThingsFilter.Update();
+
+			return true;
+		}
+
+		private static T GetEntry<T>(UniversalCollection c, string entryname, ref string error)
+		{
+			if (!string.IsNullOrEmpty(error))
+			{
+				return default;
+			}
+
+			// Find the entry
+			foreach (UniversalEntry e in c)
+			{
+				// Check if matches
+				if (e.Key == entryname)
+				{
+					// Let's be kind and cast any int to a float if needed
+					if ((typeof(T) == typeof(double)) && (e.Value is int))
+					{
+						// Make it a float
+						object fvalue = (double)(int)e.Value;
+						return (T)fvalue;
+					}
+					else
+					{
+						// Verify type
+						e.ValidateType(typeof(T));
+
+						// Found it!
+						return (T)e.Value;
+					}
+				}
+			}
+
+			error = $"Error while reading LightGroupThings data: Missing required field \"{entryname}\"";
+			return default;
+		}
+
+		private static void AddUserField<T>(Thing t, string field, T value)
+		{
+			if (typeof(T) == typeof(int))
+			{
+				t.Fields[field] = new UniValue(Types.UniversalType.Integer, value);
+			}
+			else if (typeof(T) == typeof(double))
+			{
+				t.Fields[field] = new UniValue(Types.UniversalType.Float, value);
+			}
+			else if (typeof(T) == typeof(bool))
+			{
+				t.Fields[field] = new UniValue(Types.UniversalType.Boolean, value);
+			}
 		}
 
 		private void ProcessStatMessage(string message, string[] args)
