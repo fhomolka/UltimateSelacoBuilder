@@ -227,6 +227,12 @@ namespace CodeImp.DoomBuilder.Windows
 
 			string[] data = File.ReadAllLines(path);
 
+			if (data.Length == 0)
+			{
+				// Empty file, probably no light groups
+				return true;
+			}
+
 			UniversalParser textmap = new UniversalParser();
 			textmap.InputConfiguration(data);
 
