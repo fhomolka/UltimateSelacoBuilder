@@ -62,8 +62,17 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private void StartZDRay()
 		{
+			string zdrayPath = Path.Combine(Directory.GetCurrentDirectory(), "zdray.exe"); // TODO: The location of zdray should come from settings
+
+			if (!Directory.Exists(zdrayPath))
+			{
+				OnProcessErrorCallback callback = new OnProcessErrorCallback(OnProcessError);
+				Invoke(callback, new object[] { $"Could not find ZDRay at location:\n\t{zdrayPath}" });
+				return;
+			}
+
 			m_BuildProcess = new System.Diagnostics.Process();
-			m_BuildProcess.StartInfo.FileName = Path.Combine(Directory.GetCurrentDirectory(), "zdray.exe"); // TODO: The location of zdray should come from settings
+			m_BuildProcess.StartInfo.FileName = zdrayPath;
 			m_BuildProcess.StartInfo.Arguments = $"--udbmode \"{General.Map.FilePathName}\"";
 			m_BuildProcess.StartInfo.CreateNoWindow = true;
 			m_BuildProcess.StartInfo.UseShellExecute = false;
@@ -82,9 +91,22 @@ namespace CodeImp.DoomBuilder.Windows
 				Invoke(callback, new object[] { });
 			});
 
-			if (m_BuildProcess.Start())
+			try
 			{
-				m_BuildProcess.BeginOutputReadLine();
+				if (m_BuildProcess.Start())
+				{
+					m_BuildProcess.BeginOutputReadLine();
+				}
+				else
+				{
+					OnProcessErrorCallback callback = new OnProcessErrorCallback(OnProcessError);
+					Invoke(callback, new object[] { $"Failed to run {m_BuildProcess.StartInfo.FileName}" });
+				}
+			}
+			catch  (Exception ex) 
+			{
+				OnProcessErrorCallback callback = new OnProcessErrorCallback(OnProcessError);
+				Invoke(callback, new object[] { $"ZDRay exception: {ex.Message}" });
 			}
 		}
 
@@ -139,6 +161,13 @@ namespace CodeImp.DoomBuilder.Windows
 				PrintOutputMessage("\nBuild exited with errors", Color.Red);
 				buttoncancel.Text = "Close";
 			}
+		}
+
+		private void OnProcessError(string message)
+		{
+			PrintOutputMessage(message, Color.Red);
+			m_HasErrors = true;
+			OnProcessExited();
 		}
 
 		private bool LoadLightmapData()
@@ -437,6 +466,7 @@ namespace CodeImp.DoomBuilder.Windows
 
 		delegate void ProcessOutputCallback(string message);
 		delegate void OnProcessExitedCallback();
+		delegate void OnProcessErrorCallback(string message);
 
 		private System.Diagnostics.Process m_BuildProcess;
 		private List<string> m_Messages = new List<string>();
