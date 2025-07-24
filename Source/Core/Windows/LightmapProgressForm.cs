@@ -153,7 +153,8 @@ namespace CodeImp.DoomBuilder.Windows
 					labelprogress.Text = "Lightmap rendered successfully!";
 					PrintOutputMessage("Lightmap rendered successfully!", Color.Green);
 
-					Close();
+					// TODO: Add option to auto-close
+					//Close();
 				}
 				else
 				{
@@ -169,8 +170,9 @@ namespace CodeImp.DoomBuilder.Windows
 			if (m_HasErrors || m_WasCancelled)
 			{
 				progressbar.Value = 0;
-				buttoncancel.Text = "Close";
 			}
+
+			buttoncancel.Text = "Close";
 		}
 
 		private void OnProcessError(string message)
