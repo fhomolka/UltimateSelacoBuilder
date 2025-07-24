@@ -32,6 +32,8 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 			if (m_BuildProcess != null && !m_BuildProcess.HasExited)
 			{
+				m_WasCancelled = true;
+
 				m_BuildProcess.CancelOutputRead();
 				m_BuildProcess.Kill();
 				m_BuildProcess.WaitForExit();
@@ -57,6 +59,7 @@ namespace CodeImp.DoomBuilder.Windows
 				m_BuildProcess.WaitForExit();
 				m_BuildProcess.Close();
 				m_BuildProcess = null;
+				m_WasCancelled = true;
 			}
 		}
 
@@ -70,6 +73,9 @@ namespace CodeImp.DoomBuilder.Windows
 				Invoke(callback, new object[] { $"Could not find ZDRay at location:\n\t{zdrayPath}" });
 				return;
 			}
+
+			m_HasErrors = false;
+			m_WasCancelled = false;
 
 			m_BuildProcess = new System.Diagnostics.Process();
 			m_BuildProcess.StartInfo.FileName = zdrayPath;
@@ -137,7 +143,7 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private void OnProcessExited()
 		{
-			if (!m_HasErrors)
+			if (!m_HasErrors && !m_WasCancelled)
 			{
 				progressbar.Value = 98;
 
@@ -157,8 +163,12 @@ namespace CodeImp.DoomBuilder.Windows
 
 			if (m_HasErrors)
 			{
-				progressbar.Value = 0;
 				PrintOutputMessage("\nBuild exited with errors", Color.Red);
+			}
+
+			if (m_HasErrors || m_WasCancelled)
+			{
+				progressbar.Value = 0;
 				buttoncancel.Text = "Close";
 			}
 		}
@@ -480,6 +490,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private UInt64 m_GatherTasks = 0;
 		private UInt64 m_RaytraceTasks = 0;
 		private bool m_HasErrors = false;
+		private bool m_WasCancelled = false;
 
 		const int GatherTasksStartPercent = 5;
 		const int GatherTasksEndPercent = 20;
