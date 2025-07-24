@@ -64,7 +64,7 @@ namespace CodeImp.DoomBuilder.Windows
 		{
 			string zdrayPath = Path.Combine(Directory.GetCurrentDirectory(), "zdray.exe"); // TODO: The location of zdray should come from settings
 
-			if (!Directory.Exists(zdrayPath))
+			if (!File.Exists(zdrayPath))
 			{
 				OnProcessErrorCallback callback = new OnProcessErrorCallback(OnProcessError);
 				Invoke(callback, new object[] { $"Could not find ZDRay at location:\n\t{zdrayPath}" });
