@@ -74,12 +74,26 @@ namespace CodeImp.DoomBuilder.Windows
 				return;
 			}
 
+			string arguments = "";
+
+			if (General.Settings.LightmapDeviceIndex == 1)
+			{
+				arguments += " --cpu-raytrace";
+			}
+
+			if (General.Settings.LightmapRenderQuality > 0)
+			{
+				arguments += $" --downsample={General.Settings.LightmapRenderQuality}";
+			}
+
+			arguments += $" --udbmode \"{General.Map.FilePathName}\"";
+
 			m_HasErrors = false;
 			m_WasCancelled = false;
 
 			m_BuildProcess = new System.Diagnostics.Process();
 			m_BuildProcess.StartInfo.FileName = zdrayPath;
-			m_BuildProcess.StartInfo.Arguments = $"--udbmode \"{General.Map.FilePathName}\"";
+			m_BuildProcess.StartInfo.Arguments = arguments;
 			m_BuildProcess.StartInfo.CreateNoWindow = true;
 			m_BuildProcess.StartInfo.UseShellExecute = false;
 			m_BuildProcess.StartInfo.RedirectStandardOutput = true;
@@ -143,6 +157,8 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private void OnProcessExited()
 		{
+			m_BuildProcess.CancelOutputRead();
+
 			if (!m_HasErrors && !m_WasCancelled)
 			{
 				progressbar.Value = 98;
@@ -153,8 +169,10 @@ namespace CodeImp.DoomBuilder.Windows
 					labelprogress.Text = "Lightmap rendered successfully!";
 					PrintOutputMessage("Lightmap rendered successfully!", Color.Green);
 
-					// TODO: Add option to auto-close
-					//Close();
+					if (General.Settings.LightmapProgressAutoClose)
+					{
+						Close();
+					}
 				}
 				else
 				{

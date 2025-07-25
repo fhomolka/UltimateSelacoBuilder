@@ -166,6 +166,11 @@ namespace CodeImp.DoomBuilder.Config
 		private bool autosave;
 		private int autosavecount;
 		private int autosaveinterval;
+
+		// Lightmapping
+		private int lightmapdeviceindex;
+		private int lightmaprenderquality;
+		private bool lightmapprogressautoclose;
 		
 		#endregion
 
@@ -309,6 +314,12 @@ namespace CodeImp.DoomBuilder.Config
 		public bool Autosave { get { return autosave; } internal set { autosave = value; } }
 		public int AutosaveCount { get { return autosavecount; } internal set { autosavecount = value; } }
 		public int AutosaveInterval { get { return autosaveinterval; } internal set { autosaveinterval = value; } }
+
+		// Lightmaps
+
+		public int LightmapDeviceIndex { get { return lightmapdeviceindex; } set { lightmapdeviceindex = value; } }
+		public int LightmapRenderQuality { get { return lightmaprenderquality; } set { lightmaprenderquality = value; } }
+		public bool LightmapProgressAutoClose { get { return lightmapprogressautoclose; } set { lightmapprogressautoclose = value; } }
 
 		#endregion
 
@@ -473,6 +484,11 @@ namespace CodeImp.DoomBuilder.Config
 				autosavecount = cfg.ReadSetting("autosavecount", 5);
 				autosaveinterval = cfg.ReadSetting("autosaveinterval", 5);
 
+				// Lightmap
+				lightmapdeviceindex = cfg.ReadSetting("lightmapdeviceindex", 0);
+				lightmaprenderquality = cfg.ReadSetting("lightmaprenderquality", 0);
+				lightmapprogressautoclose = cfg.ReadSetting("lightmapprogressautoclose", false);
+
 				// Success
 				return true;
 			}
@@ -607,6 +623,11 @@ namespace CodeImp.DoomBuilder.Config
 			cfg.WriteSetting("autosave", autosave);
 			cfg.WriteSetting("autosavecount", autosavecount);
 			cfg.WriteSetting("autosaveinterval", autosaveinterval);
+
+			// Lightmapping
+			cfg.WriteSetting("lightmapdeviceindex", lightmapdeviceindex);
+			cfg.WriteSetting("lightmaprenderquality", lightmaprenderquality);
+			cfg.WriteSetting("lightmapprogressautoclose", lightmapprogressautoclose);
 
 			// Save settings configuration
 			General.WriteLogLine("Saving program configuration to \"" + filepathname + "\"...");

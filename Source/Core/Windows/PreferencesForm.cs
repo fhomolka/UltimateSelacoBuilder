@@ -101,6 +101,9 @@ namespace CodeImp.DoomBuilder.Windows
 			cbFlatShadeVertices.Checked = General.Settings.FlatShadeVertices;
 			cbParallelizedLinedefPlotting.Checked = General.Settings.ParallelizedLinedefPlotting;
 			cbParallelizedVertexPlotting.Checked = General.Settings.ParallelizedVertexPlotting;
+			lightmapdevice.SelectedIndex = General.Settings.LightmapDeviceIndex;
+			lightmapquality.SelectedIndex = General.Settings.LightmapRenderQuality;
+			cbLightmapAutoClose.Checked = General.Settings.LightmapProgressAutoClose;
 
 			//mxd
 			locatetexturegroup.Checked = General.Settings.LocateTextureGroup;
@@ -466,6 +469,11 @@ namespace CodeImp.DoomBuilder.Windows
 			General.ToastManager.Enabled = cbToastsEnabled.Checked;
 			General.ToastManager.Anchor = (ToastAnchor)int.Parse((string)gbToastPosition.Controls.OfType<RadioButton>().FirstOrDefault(rb => rb.Checked).Tag);
 			General.ToastManager.Duration = tbToastDuration.GetResult(1) * 1000;
+
+			// Lightmapping
+			General.Settings.LightmapDeviceIndex = lightmapdevice.SelectedIndex;
+			General.Settings.LightmapRenderQuality = lightmapquality.SelectedIndex;
+			General.Settings.LightmapProgressAutoClose = cbLightmapAutoClose.Checked;
 
 			foreach(ListViewItem lvi in lvToastActions.Items)
 			{
@@ -1370,6 +1378,23 @@ namespace CodeImp.DoomBuilder.Windows
 			autosavecountlabel.Text = autosavecount.Value.ToString();
 		}
 
+		#endregion
+
+		#region Lightmapping Panel
+		private void cbLightmapAutoClose_CheckedChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lightmapdevice_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lightmapquality_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
 		#endregion
 
 		#region ================== Screenshots Stuff (mxd)
