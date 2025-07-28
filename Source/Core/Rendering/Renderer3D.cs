@@ -608,7 +608,7 @@ namespace CodeImp.DoomBuilder.Rendering
 					case GZGeneral.LightRenderStyle.VAVOOM: lightOffsets[0]++; break;
 					case GZGeneral.LightRenderStyle.ADDITIVE: lightOffsets[2]++; break;
                     case GZGeneral.LightRenderStyle.SUBTRACTIVE: lightOffsets[3]++; break;
-					case GZGeneral.LightRenderStyle.LIGHTMAP: // Static lights look the same as attenuated lights
+					//case GZGeneral.LightRenderStyle.LIGHTMAP: // Static lights look the same as attenuated lights // NL: Except in Selaco
 					default: lightOffsets[1]++; break; // attenuated
 				}
 			}

@@ -150,7 +150,7 @@ namespace CodeImp.DoomBuilder.GZBuilder
             ATTENUATED = 98,
             VAVOOM = 50,
             ADDITIVE = 25,
-            LIGHTMAP = 98, // Same as attenuated
+            LIGHTMAP = 99, // NL: Lightmap lights are non-attenuated in Selaco
             NONE = 0,
         }
 
