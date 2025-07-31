@@ -158,8 +158,8 @@ namespace CodeImp.DoomBuilder.Windows
 		private void OnProcessExited()
 		{
 			if (m_BuildProcess != null)
-		{
-			m_BuildProcess.CancelOutputRead();
+			{
+				m_BuildProcess.CancelOutputRead();
 			}
 
 			if (!m_HasErrors && !m_WasCancelled)
@@ -211,43 +211,51 @@ namespace CodeImp.DoomBuilder.Windows
 			string lightmapPath = General.Map.FilePathName + ".lightmap.lmp";
 			string lightgroupPath = General.Map.FilePathName + ".lightgrp.lmp";
 
-			if (!File.Exists(lightmapPath))
+			try
 			{
-				ProcessOutput($"ERROR: Failed to load LIGHTMAP lump from file: {lightmapPath}");
+				if (!File.Exists(lightmapPath))
+				{
+					ProcessOutput($"ERROR: Failed to load LIGHTMAP lump from file: {lightmapPath}");
+					return false;
+				}
+
+				if (!File.Exists(lightgroupPath))
+				{
+					ProcessOutput($"ERROR: Failed to load LIGHTGRP lump from file: {lightgroupPath}");
+					return false;
+				}
+
+				string lightgroupthingsPath = General.Map.FilePathName + ".lgroupthings.lmp";
+
+				Byte[] lightmapData = File.ReadAllBytes(lightmapPath);
+				Byte[] lightgroupData = File.ReadAllBytes(lightgroupPath);
+
+				if (!LoadLightGroupThings(lightgroupthingsPath))
+				{
+					return false;
+				}
+
+				// Copy the lumps into our currently loaded map file
+				General.Map.SetLumpData("LIGHTMAP", new MemoryStream(lightmapData));
+				General.Map.SetLumpData("LIGHTGRP", new MemoryStream(lightgroupData));
+
+				// The .lmp files are only supposed to be temporary, so delete them now that we're done
+				File.Delete(lightmapPath);
+				File.Delete(lightgroupPath);
+				File.Delete(lightgroupthingsPath);
+
+				labelprogress.Text = "Saving map file...";
+				PrintOutputMessage("Saving map file...");
+
+				General.Map.SaveMap(General.Map.FilePathName, SavePurpose.NoAutoSave); // Don't make an autosave on this step, since we already have one from the initial save
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				PrintOutputMessage($"ERROR: Unhandled exception loading lightmap data: {ex.Message}");
 				return false;
 			}
-
-			if (!File.Exists(lightgroupPath))
-			{
-				ProcessOutput($"ERROR: Failed to load LIGHTGRP lump from file: {lightgroupPath}");
-				return false;
-			}
-
-			string lightgroupthingsPath = General.Map.FilePathName + ".lgroupthings.lmp";
-
-			Byte[] lightmapData = File.ReadAllBytes(lightmapPath);
-			Byte[] lightgroupData = File.ReadAllBytes(lightgroupPath);
-
-			if (!LoadLightGroupThings(lightgroupthingsPath))
-			{
-				return false;
-			}
-
-			// Copy the lumps into our currently loaded map file
-			General.Map.SetLumpData("LIGHTMAP", new MemoryStream(lightmapData));
-			General.Map.SetLumpData("LIGHTGRP", new MemoryStream(lightgroupData));
-
-			// The .lmp files are only supposed to be temporary, so delete them now that we're done
-			File.Delete(lightmapPath);
-			File.Delete(lightgroupPath);
-			File.Delete(lightgroupthingsPath);
-
-			labelprogress.Text = "Saving map file...";
-			PrintOutputMessage("Saving map file...");
-
-			General.Map.SaveMap(General.Map.FilePathName, SavePurpose.NoAutoSave); // Don't make an autosave on this step, since we already have one from the initial save
-
-			return true;
 		}
 
 		private bool LoadLightGroupThings(string path)
