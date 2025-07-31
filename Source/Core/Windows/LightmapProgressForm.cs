@@ -157,7 +157,10 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private void OnProcessExited()
 		{
+			if (m_BuildProcess != null)
+		{
 			m_BuildProcess.CancelOutputRead();
+			}
 
 			if (!m_HasErrors && !m_WasCancelled)
 			{
