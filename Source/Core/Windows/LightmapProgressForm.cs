@@ -1,4 +1,5 @@
-﻿using CodeImp.DoomBuilder.IO;
+﻿using CodeImp.DoomBuilder.Config;
+using CodeImp.DoomBuilder.IO;
 using CodeImp.DoomBuilder.Map;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,16 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private void StartZDRay()
 		{
-			string zdrayPath = Path.Combine(Directory.GetCurrentDirectory(), "zdray.exe"); // TODO: The location of zdray should come from settings
+			if (!General.Map.ConfigSettings.NodebuilderSave.StartsWith("zdray"))
+			{
+				OnProcessErrorCallback callback = new OnProcessErrorCallback(OnProcessError);
+				Invoke(callback, new object[] { $"NodeBuilder must be set to use ZDRAY in order to build lightmaps, currently set to: {General.Map.ConfigSettings.NodebuilderSave}" });
+				return;
+			}
+
+			NodebuilderInfo nodebuilder = General.GetNodebuilderByName(General.Map.ConfigSettings.NodebuilderSave);
+
+			string zdrayPath = Path.Combine(nodebuilder.Compiler.Path, nodebuilder.Compiler.ProgramFile);
 
 			if (!File.Exists(zdrayPath))
 			{
@@ -86,7 +96,13 @@ namespace CodeImp.DoomBuilder.Windows
 				arguments += $" --downsample={General.Settings.LightmapRenderQuality}";
 			}
 
-			arguments += $" --udbmode \"{General.Map.FilePathName}\"";
+			arguments += $" --udbmode ";
+
+			arguments += nodebuilder.Parameters;
+
+			arguments = arguments.Replace("-o%FO", ""); // We don't need the output filename for UDBMode
+			arguments = arguments.Replace("--nodes-only", ""); // Default configs don't build lightmaps, so make sure we remove that!
+			arguments = arguments.Replace("%FI", General.Map.FilePathName);
 
 			m_HasErrors = false;
 			m_WasCancelled = false;
