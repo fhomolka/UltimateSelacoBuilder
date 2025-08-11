@@ -102,7 +102,7 @@ namespace CodeImp.DoomBuilder.Windows
 
 			arguments = arguments.Replace("-o%FO", ""); // We don't need the output filename for UDBMode
 			arguments = arguments.Replace("--nodes-only", ""); // Default configs don't build lightmaps, so make sure we remove that!
-			arguments = arguments.Replace("%FI", General.Map.FilePathName);
+			arguments = arguments.Replace("%FI", $"\"{General.Map.FilePathName}\""); // Make sure we have doublequotes around the filename so paths with spaces work
 
 			m_HasErrors = false;
 			m_WasCancelled = false;
