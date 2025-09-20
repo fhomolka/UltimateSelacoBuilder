@@ -389,7 +389,7 @@ namespace CodeImp.DoomBuilder.Windows
 						AddUserField(t, "user_animationInterval", animationInterval);
 						AddUserField(t, "user_primaryIntensity", primaryIntensity);
 						AddUserField(t, "user_secondaryIntensity", secondaryIntensity);
-						AddUserField(t, "allowColorChange", allowColorChange);
+						AddUserField(t, "user_allowColorChange", allowColorChange);
 						t.UpdateConfiguration();
 					}
 				}
