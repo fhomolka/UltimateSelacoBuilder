@@ -535,21 +535,33 @@ namespace CodeImp.DoomBuilder.Windows
 
 		private string FindProjectFilesPath()
 		{
-			foreach (Data.DataLocation dataLocation in General.Map.ConfigSettings.Resources)
-			{
-				if (dataLocation.type == Data.DataLocation.RESOURCE_DIRECTORY)
-				{
-					// We check for SHADOWMODELDEFS.txt because that's the one file zdray actually cares about
-					string path = Path.Combine(dataLocation.location, "SHADOWMODELDEFS.txt");
+			Data.DataLocationList locations = Data.DataLocationList.Combined(General.Map.ConfigSettings.Resources, General.Map.Options.Resources);
 
-					if (File.Exists(path))
-					{
-						return dataLocation.location;
-					}
+			foreach (Data.DataLocation dataLocation in locations)
+			{
+				if (IsValidDataLocation(dataLocation))
+				{
+					return dataLocation.location;
 				}
 			}
 
 			return null;
+		}
+
+		private bool IsValidDataLocation(Data.DataLocation dataLocation)
+		{
+			if (dataLocation.type == Data.DataLocation.RESOURCE_DIRECTORY)
+			{
+				// We check for SHADOWMODELDEFS.txt because that's the one file zdray actually cares about
+				string path = Path.Combine(dataLocation.location, "SHADOWMODELDEFS.txt");
+
+				if (File.Exists(path))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		delegate void ProcessOutputCallback(string message);
