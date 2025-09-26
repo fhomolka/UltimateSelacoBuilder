@@ -96,6 +96,12 @@ namespace CodeImp.DoomBuilder.Windows
 				arguments += $" --downsample={General.Settings.LightmapRenderQuality}";
 			}
 
+			string projectFilesPath = FindProjectFilesPath();
+			if (!string.IsNullOrEmpty(projectFilesPath))
+			{
+				arguments += $" --project-files=\"{projectFilesPath}\"";
+			}
+
 			arguments += $" --udbmode ";
 
 			arguments += nodebuilder.Parameters;
@@ -525,6 +531,25 @@ namespace CodeImp.DoomBuilder.Windows
 		private Int32 TaskPercent(UInt64 tasksComplete, UInt64 tasksCount, int fromPercent, int toPercent)
 		{
 			return (Int32)((tasksComplete / (double)tasksCount) * (toPercent - fromPercent)) + fromPercent;
+		}
+
+		private string FindProjectFilesPath()
+		{
+			foreach (Data.DataLocation dataLocation in General.Map.ConfigSettings.Resources)
+			{
+				if (dataLocation.type == Data.DataLocation.RESOURCE_DIRECTORY)
+				{
+					// We check for SHADOWMODELDEFS.txt because that's the one file zdray actually cares about
+					string path = Path.Combine(dataLocation.location, "SHADOWMODELDEFS.txt");
+
+					if (File.Exists(path))
+					{
+						return dataLocation.location;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		delegate void ProcessOutputCallback(string message);
