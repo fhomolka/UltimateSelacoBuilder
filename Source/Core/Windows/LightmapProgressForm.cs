@@ -342,6 +342,8 @@ namespace CodeImp.DoomBuilder.Windows
 					string error = null;
 
 					int[] args = new int[Linedef.NUM_ARGS];
+					double x = GetEntry<double>(uc, "x", ref error);
+					double y = GetEntry<double>(uc, "y", ref error);
 					int tag = GetEntry<int>(uc, "id", ref error);
 					int type = GetEntry<int>(uc, "type", ref error);
 					int score = GetEntry<int>(uc, "score", ref error);
@@ -381,7 +383,7 @@ namespace CodeImp.DoomBuilder.Windows
 							{ "coop", true },
 						};
 
-						t.Update(type, 0, 0, 0, 0, 0, 0, 0, 0, flags, tag, 0, args);
+						t.Update(type, x, y, 0, 0, 0, 0, 0, 0, flags, tag, 0, args);
 						AddUserField(t, "score", score);
 						AddUserField(t, "skill1", true);
 						AddUserField(t, "skill2", true);
