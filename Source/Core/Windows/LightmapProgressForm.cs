@@ -16,8 +16,9 @@ namespace CodeImp.DoomBuilder.Windows
 {
 	public partial class LightmapProgressForm : Form
 	{
-		public LightmapProgressForm()
+		public LightmapProgressForm(Action onComplete)
 		{
+			m_OnCompleteAction = onComplete;
 			InitializeComponent();
 		}
 
@@ -194,9 +195,14 @@ namespace CodeImp.DoomBuilder.Windows
 					labelprogress.Text = "Lightmap rendered successfully!";
 					PrintOutputMessage("Lightmap rendered successfully!", Color.Green);
 
-					if (General.Settings.LightmapProgressAutoClose)
+					if (General.Settings.LightmapProgressAutoClose || m_OnCompleteAction != null)
 					{
 						Close();
+					}
+
+					if (m_OnCompleteAction != null)
+					{
+						m_OnCompleteAction();
 					}
 				}
 				else
@@ -216,6 +222,8 @@ namespace CodeImp.DoomBuilder.Windows
 			}
 
 			buttoncancel.Text = "Close";
+
+			m_OnCompleteAction = null;
 		}
 
 		private void OnProcessError(string message)
@@ -582,5 +590,7 @@ namespace CodeImp.DoomBuilder.Windows
 		const int GatherTasksEndPercent = 20;
 		const int RaytraceStartPercent = GatherTasksEndPercent;
 		const int RaytraceEndPercent = 90;
+
+		Action m_OnCompleteAction;
 	}
 }

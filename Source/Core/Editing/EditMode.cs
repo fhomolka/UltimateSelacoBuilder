@@ -253,8 +253,23 @@ namespace CodeImp.DoomBuilder.Editing
 		public virtual void OnMapSetChangeBegin() { }
 		public virtual void OnMapSetChangeEnd() { }
 
+		public class MapTestStartData
+		{
+			public MapTestStartData(bool _mouseInside, Vector2D _mouseMapPos)
+			{
+				mouseinside = _mouseInside;
+				mousemappos = _mouseMapPos;
+			}
+
+			public bool mouseinside;
+			public Vector2D mousemappos;
+		}
+
+		public virtual MapTestStartData CreateStartDataFromPosition() { return null; }
+		public virtual bool CheckStartDataIsValid(MapTestStartData startData) { return true; }
+
 		//mxd. map testing events
-		public virtual bool OnMapTestBegin(bool testFromCurrentPosition) { return true; } //called before test map is launched. Returns false if map launch is impossible
+		public virtual bool OnMapTestBegin(MapTestStartData currentPositionData) { return true; } //called before test map is launched. Returns false if map launch is impossible
 		public virtual void OnMapTestEnd(bool testFromCurrentPosition) { } //called after game engine is closed
 
 		// Script events
