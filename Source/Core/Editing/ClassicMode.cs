@@ -854,13 +854,6 @@ namespace CodeImp.DoomBuilder.Editing
 				}
 
 				playerStart = null;
-
-				// Restore the value of General.Map.IsChanged before player
-				// things were modified in OnMapTestBegin().
-				if (!mapWasChangedBeforeTest)
-				{
-					General.Map.ForceMapIsChangedFalse();
-				}
 			}
 		}
 
