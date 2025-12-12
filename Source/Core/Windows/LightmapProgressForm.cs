@@ -240,6 +240,7 @@ namespace CodeImp.DoomBuilder.Windows
 
 			string lightmapPath = General.Map.FilePathName + ".lightmap.lmp";
 			string lightgroupPath = General.Map.FilePathName + ".lightgrp.lmp";
+			string checksumPath = General.Map.FilePathName + ".lmchecksum.lmp";
 
 			try
 			{
@@ -255,10 +256,17 @@ namespace CodeImp.DoomBuilder.Windows
 					return false;
 				}
 
+				if (!File.Exists(checksumPath))
+				{
+					ProcessOutput($"ERROR: Failed to load LMCHKSUM lump from file: {checksumPath}");
+					return false;
+				}
+
 				string lightgroupthingsPath = General.Map.FilePathName + ".lgroupthings.lmp";
 
 				Byte[] lightmapData = File.ReadAllBytes(lightmapPath);
 				Byte[] lightgroupData = File.ReadAllBytes(lightgroupPath);
+				Byte[] checksumData = File.ReadAllBytes(checksumPath);
 
 				if (!LoadLightGroupThings(lightgroupthingsPath))
 				{
@@ -268,11 +276,13 @@ namespace CodeImp.DoomBuilder.Windows
 				// Copy the lumps into our currently loaded map file
 				General.Map.SetLumpData("LIGHTMAP", new MemoryStream(lightmapData));
 				General.Map.SetLumpData("LIGHTGRP", new MemoryStream(lightgroupData));
+				General.Map.SetLumpData("LMCHKSUM", new MemoryStream(checksumData));
 
 				// The .lmp files are only supposed to be temporary, so delete them now that we're done
 				File.Delete(lightmapPath);
 				File.Delete(lightgroupPath);
 				File.Delete(lightgroupthingsPath);
+				File.Delete(checksumPath);
 
 				labelprogress.Text = "Saving map file...";
 				PrintOutputMessage("Saving map file...");
