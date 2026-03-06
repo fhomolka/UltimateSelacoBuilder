@@ -167,6 +167,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 					case "patrolspecial":
 						result.PatrolSpecials.Add(t);
 						break;
+					case "snipernode":
 					case "pathnode":
 					case "doornode":
 						int nodeid = t.Fields.GetValue("user_nodeid", -1);
