@@ -413,7 +413,12 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 						Thing endNode = result.PathNodes[targetID];
 						end = endNode.Position;
 						end.z += GetCorrectHeight(endNode, blockmap, true);
-						lines.Add(new Line3D(start, end, General.Colors.InfoLine.WithAlpha(180)));
+						PixelColor col = General.Colors.InfoLine.WithAlpha(180);
+						if(tt.Fields.GetValue("user_connection" + (x + 1) + "_obstacle", 0) > 0 || (int)tt.Fields.GetValue("user_connection" + (x + 1) + "_obstacle", 0.0) > 0)
+						{
+							col = PixelColor.FromInt(0xFF0000).WithAlpha(75);
+						}
+						lines.Add(new Line3D(start, end, col));
 					}
 				}
 			}
