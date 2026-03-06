@@ -152,7 +152,7 @@ functions
 			power *= df;
 		}
 
-		if (lColor.a > 0.979 && lColor.a < 0.981) // attenuated light 98%
+		if (lColor.a > 0.969 && lColor.a < 0.981) // attenuated light 97-98%
 			power *= diffuseContribution;
 
 		// for w/e reason GZDoom also does this

@@ -122,17 +122,29 @@ namespace CodeImp.DoomBuilder.GZBuilder
 
             [LightDefRenderStyle(LightRenderStyle.LIGHTMAP)]
             [LightDefNum(9876, 9877, 9878, 9879)]
-            [LightDefClass("pointlighttraceattenuated", "pointlightpulsetraceattenuated", "pointlightflickertraceattenuated", "pointlightflickerrandomtraceattenuated")]
-            [LightDefModifier(LightModifier.NORMAL, LightModifier.PULSE, LightModifier.FLICKER, LightModifier.FLICKERRANDOM)]
+            [LightDefClass("StaticPointLight", "StaticPointLightFlicker", "StaticPointLightFlickerRandom", "StaticPointLightPulse")]
+            [LightDefModifier(LightModifier.NORMAL, LightModifier.FLICKER, LightModifier.FLICKERRANDOM, LightModifier.PULSE)]
             POINT_LIGHTMAP,
 
             [LightDefRenderStyle(LightRenderStyle.LIGHTMAP)]
             [LightDefNum(9881, 9882, 9883, 9884)]
-            [LightDefClass("spotlighttraceattenuated", "spotlightpulsetraceattenuated", "spotlightflickertraceattenuated", "spotlightflickerrandomtraceattenuated")]
-            [LightDefModifier(LightModifier.NORMAL, LightModifier.PULSE, LightModifier.FLICKER, LightModifier.FLICKERRANDOM)]
-            SPOT_LIGHTMAP,
+            [LightDefClass("StaticSpotLight", "StaticSpotLightFlicker", "StaticSpotLightFlickerRandom", "StaticSpotLightPulse")]
+            [LightDefModifier(LightModifier.NORMAL, LightModifier.FLICKER, LightModifier.FLICKERRANDOM, LightModifier.PULSE)]
+			SPOT_LIGHTMAP,
 
-            [LightDefRenderStyle(LightRenderStyle.NONE)]
+			[LightDefRenderStyle(LightRenderStyle.LIGHTMAP_ATTENUATED)]
+			[LightDefNum(9906, 9907, 9908, 9909)]
+			[LightDefClass("StaticAttenuatedPointLight", "StaticAttenuatedPointLightFlicker", "StaticAttenuatedPointLightFlickerRandom", "StaticAttenuatedPointLightPulse")]
+			[LightDefModifier(LightModifier.NORMAL, LightModifier.FLICKER, LightModifier.FLICKERRANDOM, LightModifier.PULSE)]
+			POINT_LIGHTMAP_ATTENUATED,
+
+			[LightDefRenderStyle(LightRenderStyle.LIGHTMAP_ATTENUATED)]
+			[LightDefNum(9911, 9912, 9913, 9914)]
+			[LightDefClass("StaticAttenuatedSpotLight", "StaticAttenuatedSpotLightFlicker", "StaticAttenuatedSpotLightFlickerRandom", "StaticAttenuatedSpotLightPulse")]
+			[LightDefModifier(LightModifier.NORMAL, LightModifier.FLICKER, LightModifier.FLICKERRANDOM, LightModifier.PULSE)]
+			SPOT_LIGHTMAP_ATTENUATED,
+
+			[LightDefRenderStyle(LightRenderStyle.NONE)]
             [LightDefNum(9890)]
             [LightDefClass("zdraysun")]
             [LightDefModifier(LightModifier.NORMAL)]
@@ -150,7 +162,8 @@ namespace CodeImp.DoomBuilder.GZBuilder
             ATTENUATED = 98,
             VAVOOM = 50,
             ADDITIVE = 25,
-            LIGHTMAP = 98, // Same as attenuated
+            LIGHTMAP = 99, // NL: Lightmap lights are non-attenuated in Selaco
+			LIGHTMAP_ATTENUATED = 97,
             NONE = 0,
         }
 
@@ -207,7 +220,7 @@ namespace CodeImp.DoomBuilder.GZBuilder
             return null;
         }
 
-        public class LightData
+		public class LightData
         {
             public LightDef LightDef { get; private set; }
             private LightDefNum LightDefNum;
@@ -233,6 +246,7 @@ namespace CodeImp.DoomBuilder.GZBuilder
                     case LightDef.POINT_SUBTRACTIVE:
                     case LightDef.POINT_ATTENUATED:
                     case LightDef.POINT_LIGHTMAP:
+                    case LightDef.POINT_LIGHTMAP_ATTENUATED:
                         LightType = LightType.POINT;
                         break;
                     case LightDef.SPOT_NORMAL:
@@ -240,6 +254,7 @@ namespace CodeImp.DoomBuilder.GZBuilder
                     case LightDef.SPOT_SUBTRACTIVE:
                     case LightDef.SPOT_ATTENUATED:
                     case LightDef.SPOT_LIGHTMAP:
+                    case LightDef.SPOT_LIGHTMAP_ATTENUATED:
                         LightType = LightType.SPOT;
                         break;
                     case LightDef.VAVOOM_GENERIC:
@@ -267,7 +282,7 @@ namespace CodeImp.DoomBuilder.GZBuilder
                 if (LightDefRenderStyle != null)
                     LightRenderStyle = LightDefRenderStyle.RenderStyle;
                 else LightRenderStyle = LightRenderStyle.NONE;
-                LightAnimated = (LightModifier == LightModifier.PULSE || LightModifier == LightModifier.FLICKER || LightModifier == LightModifier.FLICKERRANDOM);
+				LightAnimated = (LightModifier == LightModifier.PULSE || LightModifier == LightModifier.FLICKER || LightModifier == LightModifier.FLICKERRANDOM);
                 LightInternal = true;
                 UpdateLightType();
                 LightVavoom = (LightType == LightType.VAVOOM);
@@ -281,14 +296,14 @@ namespace CodeImp.DoomBuilder.GZBuilder
                 LightDefClass = GetLightDefClass(LightDef);
                 LightDefModifier = GetLightDefModifier(LightDef);
                 LightDefRenderStyle = GetLightDefRenderStyle(LightDef);
-                LightNum = LightDefNum.DoomEdNums[Array.IndexOf(LightDefClass.Classes, cls)];
+				LightNum = LightDefNum.DoomEdNums[Array.IndexOf(LightDefClass.Classes, cls)];
                 if (LightDefModifier != null)
                     LightModifier = LightDefModifier.Modifiers[Array.IndexOf(LightDefClass.Classes, cls)];
                 else LightModifier = LightModifier.NORMAL;
                 if (LightDefRenderStyle != null)
                     LightRenderStyle = LightDefRenderStyle.RenderStyle;
                 else LightRenderStyle = LightRenderStyle.NONE;
-                LightAnimated = (LightModifier == LightModifier.PULSE || LightModifier == LightModifier.FLICKER || LightModifier == LightModifier.FLICKERRANDOM);
+				LightAnimated = (LightModifier == LightModifier.PULSE || LightModifier == LightModifier.FLICKER || LightModifier == LightModifier.FLICKERRANDOM);
                 LightInternal = true;
                 LightVavoom = (LightDef == LightDef.VAVOOM_GENERIC || LightDef == LightDef.VAVOOM_COLORED);
                 UpdateLightType();

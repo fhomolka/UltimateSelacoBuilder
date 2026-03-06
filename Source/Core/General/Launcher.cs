@@ -266,21 +266,23 @@ namespace CodeImp.DoomBuilder
 		[BeginAction("testmap")]
 		public void Test()
 		{
-			TestAtSkill(General.Map.ConfigSettings.TestSkill, false);
+			TestAtSkill(General.Map.ConfigSettings.TestSkill, null);
 		}
 
 		//mxd
 		[BeginAction("testmapfromview")]
 		public void TestFromView() 
 		{
-			TestAtSkill(General.Map.ConfigSettings.TestSkill, true);
+			Editing.EditMode.MapTestStartData startData = General.Editing.Mode.CreateStartDataFromPosition();
+			TestAtSkill(General.Map.ConfigSettings.TestSkill, startData);
 		}
 		
 		// This saves the map to a temporary file and launches a test with the given skill
-		public void TestAtSkill(int skill) { TestAtSkill(skill, false); }
-		public void TestAtSkill(int skill, bool testfromcurrentposition)
+		public void TestAtSkill(int skill) { TestAtSkill(skill, null); }
+		public void TestAtSkill(int skill, Editing.EditMode.MapTestStartData startData)
 		{
-			if(!General.Editing.Mode.OnMapTestBegin(testfromcurrentposition)) return; //mxd
+			if (!General.Editing.Mode.CheckStartDataIsValid(startData)) return;
+			if (!General.Editing.Mode.OnMapTestBegin(startData)) return; //mxd
 			
 			Cursor oldcursor = Cursor.Current;
 
@@ -404,7 +406,7 @@ namespace CodeImp.DoomBuilder
 				}
 			}
 			General.Plugins.OnMapSaveEnd(SavePurpose.Testing);
-			General.Editing.Mode.OnMapTestEnd(testfromcurrentposition); //mxd
+			General.Editing.Mode.OnMapTestEnd(startData != null); //mxd
 		}
 
 		//mxd

@@ -26,7 +26,8 @@ namespace CodeImp.DoomBuilder
 		AsNewFile = 1,
 		IntoFile = 2,
 		Testing = 3,
-		Autosave = 4
+		Autosave = 4,
+		NoAutoSave = 5
 	}
 }
 

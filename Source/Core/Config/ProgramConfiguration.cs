@@ -83,6 +83,7 @@ namespace CodeImp.DoomBuilder.Config
 		private bool toolbarfilter;
 		private bool toolbarviewmodes;
 		private bool toolbargeometry;
+		private bool toolbarlightmaps;
 		private bool toolbartesting;
 		private bool toolbarfile;
 		private float filteranisotropy;
@@ -165,6 +166,11 @@ namespace CodeImp.DoomBuilder.Config
 		private bool autosave;
 		private int autosavecount;
 		private int autosaveinterval;
+
+		// Lightmapping
+		private int lightmapdeviceindex;
+		private int lightmaprenderquality;
+		private bool lightmapprogressautoclose;
 		
 		#endregion
 
@@ -208,6 +214,7 @@ namespace CodeImp.DoomBuilder.Config
 		public bool ToolbarFilter { get { return toolbarfilter; } internal set { toolbarfilter = value; } }
 		public bool ToolbarViewModes { get { return toolbarviewmodes; } internal set { toolbarviewmodes = value; } }
 		public bool ToolbarGeometry { get { return toolbargeometry; } internal set { toolbargeometry = value; } }
+		public bool ToolbarLightmaps { get { return toolbarlightmaps; } internal set { toolbarlightmaps = value; } }
 		public bool ToolbarTesting { get { return toolbartesting; } internal set { toolbartesting = value; } }
 		public bool ToolbarFile { get { return toolbarfile; } internal set { toolbarfile = value; } }
 		public float FilterAnisotropy { get { return filteranisotropy; } internal set { filteranisotropy = value; } }
@@ -308,6 +315,12 @@ namespace CodeImp.DoomBuilder.Config
 		public int AutosaveCount { get { return autosavecount; } internal set { autosavecount = value; } }
 		public int AutosaveInterval { get { return autosaveinterval; } internal set { autosaveinterval = value; } }
 
+		// Lightmaps
+
+		public int LightmapDeviceIndex { get { return lightmapdeviceindex; } set { lightmapdeviceindex = value; } }
+		public int LightmapRenderQuality { get { return lightmaprenderquality; } set { lightmaprenderquality = value; } }
+		public bool LightmapProgressAutoClose { get { return lightmapprogressautoclose; } set { lightmapprogressautoclose = value; } }
+
 		#endregion
 
 		#region ================== Constructor / Disposer
@@ -369,6 +382,7 @@ namespace CodeImp.DoomBuilder.Config
 				toolbarfilter = cfg.ReadSetting("toolbarfilter", true);
 				toolbarviewmodes = cfg.ReadSetting("toolbarviewmodes", true);
 				toolbargeometry = cfg.ReadSetting("toolbargeometry", true);
+				toolbarlightmaps = cfg.ReadSetting("toolbarlightmaps", true);
 				toolbartesting = cfg.ReadSetting("toolbartesting", true);
 				toolbarfile = cfg.ReadSetting("toolbarfile", true);
 				filteranisotropy = General.Clamp(cfg.ReadSetting("filteranisotropy", 16.0f), 1.0f, 16.0f);
@@ -470,6 +484,11 @@ namespace CodeImp.DoomBuilder.Config
 				autosavecount = cfg.ReadSetting("autosavecount", 5);
 				autosaveinterval = cfg.ReadSetting("autosaveinterval", 5);
 
+				// Lightmap
+				lightmapdeviceindex = cfg.ReadSetting("lightmapdeviceindex", 0);
+				lightmaprenderquality = cfg.ReadSetting("lightmaprenderquality", 0);
+				lightmapprogressautoclose = cfg.ReadSetting("lightmapprogressautoclose", false);
+
 				// Success
 				return true;
 			}
@@ -519,6 +538,7 @@ namespace CodeImp.DoomBuilder.Config
 			cfg.WriteSetting("toolbarfilter", toolbarfilter);
 			cfg.WriteSetting("toolbarviewmodes", toolbarviewmodes);
 			cfg.WriteSetting("toolbargeometry", toolbargeometry);
+			cfg.WriteSetting("toolbarlightmaps", toolbarlightmaps);
 			cfg.WriteSetting("toolbartesting", toolbartesting);
 			cfg.WriteSetting("toolbarfile", toolbarfile);
 			cfg.WriteSetting("filteranisotropy", filteranisotropy);
@@ -603,6 +623,11 @@ namespace CodeImp.DoomBuilder.Config
 			cfg.WriteSetting("autosave", autosave);
 			cfg.WriteSetting("autosavecount", autosavecount);
 			cfg.WriteSetting("autosaveinterval", autosaveinterval);
+
+			// Lightmapping
+			cfg.WriteSetting("lightmapdeviceindex", lightmapdeviceindex);
+			cfg.WriteSetting("lightmaprenderquality", lightmaprenderquality);
+			cfg.WriteSetting("lightmapprogressautoclose", lightmapprogressautoclose);
 
 			// Save settings configuration
 			General.WriteLogLine("Saving program configuration to \"" + filepathname + "\"...");

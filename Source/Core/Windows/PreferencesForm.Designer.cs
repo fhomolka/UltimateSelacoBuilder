@@ -241,6 +241,12 @@ namespace CodeImp.DoomBuilder.Windows
 			this.rbToastPosBL = new System.Windows.Forms.RadioButton();
 			this.rbToastPosTR = new System.Windows.Forms.RadioButton();
 			this.rbToastPosTL = new System.Windows.Forms.RadioButton();
+			this.tablightmapping = new System.Windows.Forms.TabPage();
+			this.cbLightmapAutoClose = new System.Windows.Forms.CheckBox();
+			this.lightmapdevice = new System.Windows.Forms.ComboBox();
+			this.label35 = new System.Windows.Forms.Label();
+			this.label36 = new System.Windows.Forms.Label();
+			this.lightmapquality = new System.Windows.Forms.ComboBox();
 			groupBox1 = new System.Windows.Forms.GroupBox();
 			label7 = new System.Windows.Forms.Label();
 			label5 = new System.Windows.Forms.Label();
@@ -294,6 +300,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.tabtoasts.SuspendLayout();
 			this.groupBox10.SuspendLayout();
 			this.gbToastPosition.SuspendLayout();
+			this.tablightmapping.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// groupBox1
@@ -829,6 +836,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.tabs.Controls.Add(this.tabpasting);
 			this.tabs.Controls.Add(this.tabrecovery);
 			this.tabs.Controls.Add(this.tabtoasts);
+			this.tabs.Controls.Add(this.tablightmapping);
 			this.tabs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tabs.Location = new System.Drawing.Point(11, 13);
 			this.tabs.Multiline = true;
@@ -2757,6 +2765,82 @@ namespace CodeImp.DoomBuilder.Windows
 			this.rbToastPosTL.Tag = "1";
 			this.rbToastPosTL.UseVisualStyleBackColor = true;
 			// 
+			// tablightmapping
+			// 
+			this.tablightmapping.Controls.Add(this.cbLightmapAutoClose);
+			this.tablightmapping.Controls.Add(this.lightmapquality);
+			this.tablightmapping.Controls.Add(this.lightmapdevice);
+			this.tablightmapping.Controls.Add(this.label36);
+			this.tablightmapping.Controls.Add(this.label35);
+			this.tablightmapping.Location = new System.Drawing.Point(4, 40);
+			this.tablightmapping.Name = "tablightmapping";
+			this.tablightmapping.Padding = new System.Windows.Forms.Padding(3);
+			this.tablightmapping.Size = new System.Drawing.Size(680, 531);
+			this.tablightmapping.TabIndex = 7;
+			this.tablightmapping.Text = "Lightmapping";
+			this.tablightmapping.UseVisualStyleBackColor = true;
+			// 
+			// cbLightmapAutoClose
+			// 
+			this.cbLightmapAutoClose.AutoSize = true;
+			this.cbLightmapAutoClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cbLightmapAutoClose.Location = new System.Drawing.Point(16, 72);
+			this.cbLightmapAutoClose.Name = "cbLightmapAutoClose";
+			this.cbLightmapAutoClose.Size = new System.Drawing.Size(163, 17);
+			this.cbLightmapAutoClose.TabIndex = 3;
+			this.cbLightmapAutoClose.Text = "Auto Close Progress Window";
+			this.cbLightmapAutoClose.UseVisualStyleBackColor = true;
+			this.cbLightmapAutoClose.CheckedChanged += new System.EventHandler(this.cbLightmapAutoClose_CheckedChanged);
+			// 
+			// lightmapdevice
+			// 
+			this.lightmapdevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.lightmapdevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lightmapdevice.FormattingEnabled = true;
+			this.lightmapdevice.Items.AddRange(new object[] {
+            "Prefer GPU",
+            "CPU"});
+			this.lightmapdevice.Location = new System.Drawing.Point(72, 16);
+			this.lightmapdevice.Name = "lightmapdevice";
+			this.lightmapdevice.Size = new System.Drawing.Size(168, 21);
+			this.lightmapdevice.TabIndex = 1;
+			this.lightmapdevice.SelectedIndexChanged += new System.EventHandler(this.lightmapdevice_SelectedIndexChanged);
+			// 
+			// label35
+			// 
+			this.label35.AutoSize = true;
+			this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label35.Location = new System.Drawing.Point(16, 20);
+			this.label35.Name = "label35";
+			this.label35.Size = new System.Drawing.Size(44, 13);
+			this.label35.TabIndex = 0;
+			this.label35.Text = "Device:";
+			// 
+			// label36
+			// 
+			this.label36.AutoSize = true;
+			this.label36.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label36.Location = new System.Drawing.Point(16, 48);
+			this.label36.Name = "label36";
+			this.label36.Size = new System.Drawing.Size(42, 13);
+			this.label36.TabIndex = 0;
+			this.label36.Text = "Quality:";
+			// 
+			// lightmapquality
+			// 
+			this.lightmapquality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.lightmapquality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lightmapquality.FormattingEnabled = true;
+			this.lightmapquality.Items.AddRange(new object[] {
+            "Full (1x)",
+            "Half (0.5x)",
+            "Quarter (0.25x)"});
+			this.lightmapquality.Location = new System.Drawing.Point(72, 44);
+			this.lightmapquality.Name = "lightmapquality";
+			this.lightmapquality.Size = new System.Drawing.Size(168, 21);
+			this.lightmapquality.TabIndex = 2;
+			this.lightmapquality.SelectedIndexChanged += new System.EventHandler(this.lightmapquality_SelectedIndexChanged);
+			// 
 			// PreferencesForm
 			// 
 			this.AcceptButton = this.apply;
@@ -2841,6 +2925,8 @@ namespace CodeImp.DoomBuilder.Windows
 			this.groupBox10.ResumeLayout(false);
 			this.gbToastPosition.ResumeLayout(false);
 			this.gbToastPosition.PerformLayout();
+			this.tablightmapping.ResumeLayout(false);
+			this.tablightmapping.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -3050,5 +3136,11 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.Panel autosavedisabledwarning;
 		private System.Windows.Forms.Label label34;
 		private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.TabPage tablightmapping;
+		private System.Windows.Forms.ComboBox lightmapdevice;
+		private System.Windows.Forms.Label label35;
+		private System.Windows.Forms.CheckBox cbLightmapAutoClose;
+		private System.Windows.Forms.ComboBox lightmapquality;
+		private System.Windows.Forms.Label label36;
 	}
 }

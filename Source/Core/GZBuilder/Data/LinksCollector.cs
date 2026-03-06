@@ -167,6 +167,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 					case "patrolspecial":
 						result.PatrolSpecials.Add(t);
 						break;
+					case "snipernode":
 					case "pathnode":
 					case "doornode":
 						int nodeid = t.Fields.GetValue("user_nodeid", -1);
@@ -413,7 +414,12 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 						Thing endNode = result.PathNodes[targetID];
 						end = endNode.Position;
 						end.z += GetCorrectHeight(endNode, blockmap, true);
-						lines.Add(new Line3D(start, end, General.Colors.InfoLine.WithAlpha(180)));
+						PixelColor col = General.Colors.InfoLine.WithAlpha(180);
+						if(tt.Fields.GetValue("user_connection" + (x + 1) + "_obstacle", 0) > 0 || (int)tt.Fields.GetValue("user_connection" + (x + 1) + "_obstacle", 0.0) > 0)
+						{
+							col = PixelColor.FromInt(0xFF0000).WithAlpha(75);
+						}
+						lines.Add(new Line3D(start, end, col));
 					}
 				}
 			}
@@ -610,6 +616,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
                         color = new PixelColor((byte)linealpha, (byte)t.Args[1], (byte)t.Args[2], (byte)t.Args[3]);
                         break;
 
+					case GZGeneral.LightDef.POINT_LIGHTMAP_ATTENUATED:
 					case GZGeneral.LightDef.POINT_LIGHTMAP:
 						// ZDRay static lights have an intensity that's set through the thing's alpha value
 						double intensity = t.Fields.GetValue("alpha", 1.0);
@@ -653,7 +660,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
             else color = new PixelColor((byte)linealpha, (byte)((t.Args[0] & 0xFF0000) >> 16), (byte)((t.Args[0] & 0x00FF00) >> 8), (byte)((t.Args[0] & 0x0000FF)));
 
 			// ZDRay static lights have an intensity that's set through the thing's alpha value
-			if (t.DynamicLightType.LightDef == GZGeneral.LightDef.SPOT_LIGHTMAP)
+			if (t.DynamicLightType.LightDef == GZGeneral.LightDef.SPOT_LIGHTMAP || t.DynamicLightType.LightDef == GZGeneral.LightDef.SPOT_LIGHTMAP_ATTENUATED)
 			{
 				double intensity = t.Fields.GetValue("alpha", 1.0);
 				if (intensity != 1.0)
