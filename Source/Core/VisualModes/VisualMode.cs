@@ -326,10 +326,21 @@ namespace CodeImp.DoomBuilder.VisualModes
 			ResourcesReloaded();
 		}
 
-		//mxd
-		public override bool OnMapTestBegin(bool testFromCurrentPosition) 
+		public override MapTestStartData CreateStartDataFromPosition()
 		{
-			if(testFromCurrentPosition) 
+			return new MapTestStartData(true, new Vector2D(0, 0));
+		}
+
+		public override bool CheckStartDataIsValid(MapTestStartData startData)
+		{
+			// VisualMode start data is always valid
+			return true;
+		}
+
+		//mxd
+		public override bool OnMapTestBegin(MapTestStartData startData) 
+		{
+			if(startData != null) 
 			{
 				//find Single Player Start. Should have Type 1 in all games
 				Thing start = null;

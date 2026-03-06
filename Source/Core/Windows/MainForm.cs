@@ -426,6 +426,7 @@ namespace CodeImp.DoomBuilder.Windows
 			UpdateToolsMenu();
 			UpdateToolbar();
 			UpdateSkills();
+			UpdateLightmapSettings();
 			UpdateHelpMenu();
 		}
 
@@ -1657,6 +1658,56 @@ namespace CodeImp.DoomBuilder.Windows
 			}
 		}
 
+		private void UpdateLightmapSettings()
+		{
+			buttonlightmaps.DropDownItems.Clear();
+
+			ToolStripMenuItem itemDeviceGPU = new ToolStripMenuItem("Device: Prefer GPU");
+			itemDeviceGPU.Checked = General.Settings.LightmapDeviceIndex == 0;
+			itemDeviceGPU.Click += (object sender, EventArgs e) => { General.Settings.LightmapDeviceIndex = 0; UpdateLightmapSettings(); };
+
+			ToolStripMenuItem itemDeviceCPU = new ToolStripMenuItem("Device: CPU");
+			itemDeviceCPU.Checked = General.Settings.LightmapDeviceIndex == 1;
+			itemDeviceCPU.Click += (object sender, EventArgs e) => { General.Settings.LightmapDeviceIndex = 1; UpdateLightmapSettings(); };
+
+			ToolStripMenuItem itemResolutionFull = new ToolStripMenuItem("Resolution: Full (1.0x)");
+			itemResolutionFull.Checked = General.Settings.LightmapRenderQuality == 0;
+			itemResolutionFull.Click += (object sender, EventArgs e) => { General.Settings.LightmapRenderQuality = 0; UpdateLightmapSettings(); };
+
+			ToolStripMenuItem itemResolutionHalf = new ToolStripMenuItem("Resolution: Half (0.5x)");
+			itemResolutionHalf.Checked = General.Settings.LightmapRenderQuality == 1;
+			itemResolutionHalf.Click += (object sender, EventArgs e) => { General.Settings.LightmapRenderQuality = 1; UpdateLightmapSettings(); };
+
+			ToolStripMenuItem itemResolutionQuarter = new ToolStripMenuItem("Resolution: Quarter (0.25x)");
+			itemResolutionQuarter.Checked = General.Settings.LightmapRenderQuality == 2;
+			itemResolutionQuarter.Click += (object sender, EventArgs e) => { General.Settings.LightmapRenderQuality = 2; UpdateLightmapSettings(); };
+
+			ToolStripMenuItem itemBake = new ToolStripMenuItem("Bake");
+			itemBake.Image = CodeImp.DoomBuilder.Properties.Resources.Light;
+			itemBake.Tag = "builder_buildlightmaps";
+			itemBake.Click += new System.EventHandler(this.InvokeTaggedAction);
+
+			ToolStripMenuItem itemBakeAndPlay = new ToolStripMenuItem("Bake and Play");
+			itemBakeAndPlay.Image = CodeImp.DoomBuilder.Properties.Resources.BakeAndPlay;
+			itemBakeAndPlay.Tag = "builder_buildlightmapsandplay";
+			itemBakeAndPlay.Click += new System.EventHandler(this.InvokeTaggedAction);
+
+			List<ToolStripItem> items = new List<ToolStripItem>
+			{
+				itemDeviceGPU,
+				itemDeviceCPU,
+				new ToolStripSeparator { Padding = new Padding(0, 3, 0, 3) },
+				itemResolutionFull,
+				itemResolutionHalf,
+				itemResolutionQuarter,
+				new ToolStripSeparator { Padding = new Padding(0, 3, 0, 3) },
+				itemBake,
+				itemBakeAndPlay,
+			};
+
+			buttonlightmaps.DropDownItems.AddRange(items.ToArray());
+		}
+
 		//mxd
 		internal void DisableDynamicGridResize()
 		{
@@ -2194,7 +2245,7 @@ namespace CodeImp.DoomBuilder.Windows
 			buttonsplitjoinedsectors.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
 			buttonsplitjoinedsectors.Checked = General.Settings.SplitJoinedSectors; //mxd
 			buttonautoclearsidetextures.Visible = General.Settings.ToolbarGeometry && maploaded; //mxd
-			buttonbuildlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
+			buttonlightmaps.Visible = General.Settings.ToolbarLightmaps && maploaded;
 			buttontest.Visible = General.Settings.ToolbarTesting && maploaded;
 			buttontoggleclassicrendering.Visible = General.Settings.ToolbarViewModes && maploaded;
 
@@ -3363,6 +3414,28 @@ namespace CodeImp.DoomBuilder.Windows
 		[BeginAction("buildlightmaps")]
 		internal void BuildLightmaps()
 		{
+			DoLightmapBuild(null);
+		}
+
+		[BeginAction("buildlightmapsandplay")]
+		internal void BuildLightmapsAndPlay()
+		{
+			DoLightmapBuild(() => { General.Map.Launcher.Test(); });
+		}
+
+		[BeginAction("buildlightmapsandplayfromposition")]
+		internal void BuildLightmapsAndPlayFromPosition()
+		{
+			Editing.EditMode.MapTestStartData startData = General.Editing.Mode.CreateStartDataFromPosition();
+
+			if (General.Editing.Mode.CheckStartDataIsValid(startData))
+			{
+				DoLightmapBuild(() => { General.Map.Launcher.TestAtSkill(General.Map.ConfigSettings.TestSkill, startData); });
+			}
+		}
+
+		void DoLightmapBuild(System.Action onComplete)
+		{
 			//if (General.Map == null)
 			//{
 			//	return;
@@ -3385,7 +3458,7 @@ namespace CodeImp.DoomBuilder.Windows
 				}
 			}
 
-			ShowLightmapBuilder();
+			ShowLightmapBuilder(onComplete);
 		}
 
 		#endregion
@@ -4465,10 +4538,10 @@ namespace CodeImp.DoomBuilder.Windows
 			}
 		}
 
-		public DialogResult ShowLightmapBuilder()
+		public DialogResult ShowLightmapBuilder(System.Action onComplete)
 		{
 			DialogResult result;
-			LightmapProgressForm f = new LightmapProgressForm();
+			LightmapProgressForm f = new LightmapProgressForm(onComplete);
 			DisableProcessing(); //mxd
 #if NO_WIN32
 			BreakExclusiveMouseInput();

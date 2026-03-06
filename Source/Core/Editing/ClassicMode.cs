@@ -703,21 +703,61 @@ namespace CodeImp.DoomBuilder.Editing
 			base.OnCancel();
 		}
 
-		//mxd
-		public override bool OnMapTestBegin(bool testFromCurrentPosition) 
+		// NL: Used so we can store the start position for later (Mostly for 'Build Lightmaps and Play From Position')
+		public override MapTestStartData CreateStartDataFromPosition()
 		{
-			if(testFromCurrentPosition) 
+			return new MapTestStartData(mouseinside, mousemappos);
+		}
+
+		// NL: Used so we can check the start data is valid early, before we actually launch the map
+		public override bool CheckStartDataIsValid(MapTestStartData startData)
+		{
+			if (startData == null)
+			{
+				return true;
+			}
+
+			if (!startData.mouseinside)
+			{
+				General.MainWindow.DisplayStatus(StatusType.Warning, "Can't test from current position: mouse is outside editing window!");
+				return false;
+			}
+
+			//now check if cursor is located inside a sector
+			Sector s = General.Map.Map.GetSectorByCoordinates(startData.mousemappos);
+
+			if (s == null)
+			{
+				General.MainWindow.DisplayStatus(StatusType.Warning, "Can't test from current position: mouse cursor must be inside a sector!");
+				return false;
+			}
+
+			// Spawning sector height isn't too low to cause a stuck player.
+			int playerheight = General.Map.Config.ReadSetting("thingtypes.players.height", 56);
+			if (s.CeilHeight - s.FloorHeight < playerheight)
+			{
+				General.MainWindow.DisplayStatus(StatusType.Warning, "Can't test from current position: sector is too low!");
+				return false;
+			}
+
+			return true;
+		}
+
+		//mxd
+		public override bool OnMapTestBegin(MapTestStartData currentPositionData) 
+		{
+			if(currentPositionData != null) 
 			{
 				bool oldignorepropchanges = General.Map.UndoRedo.IgnorePropChanges;
 
-				if (!mouseinside)
+				if (!currentPositionData.mouseinside)
 				{
 					General.MainWindow.DisplayStatus(StatusType.Warning, "Can't test from current position: mouse is outside editing window!");
 					return false;
 				}
 
 				//now check if cursor is located inside a sector
-				Sector s = General.Map.Map.GetSectorByCoordinates(mousemappos);
+				Sector s = General.Map.Map.GetSectorByCoordinates(currentPositionData.mousemappos);
 
 				if (s == null)
 				{
@@ -791,7 +831,7 @@ namespace CodeImp.DoomBuilder.Editing
 				playerStartPosition = start.Position;
 
 				//everything should be valid, let's move player start here
-				start.Move(new Vector3D(mousemappos.x, mousemappos.y, s.FloorHeight));
+				start.Move(new Vector3D(currentPositionData.mousemappos.x, currentPositionData.mousemappos.y, s.FloorHeight));
 
 				General.Map.UndoRedo.IgnorePropChanges = oldignorepropchanges;
 			}
@@ -814,13 +854,6 @@ namespace CodeImp.DoomBuilder.Editing
 				}
 
 				playerStart = null;
-
-				// Restore the value of General.Map.IsChanged before player
-				// things were modified in OnMapTestBegin().
-				if (!mapWasChangedBeforeTest)
-				{
-					General.Map.ForceMapIsChangedFalse();
-				}
 			}
 		}
 

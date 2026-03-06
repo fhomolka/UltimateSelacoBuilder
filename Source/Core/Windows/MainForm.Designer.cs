@@ -231,7 +231,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttontogglevisualvertices = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
 			this.separatorgzmodes = new System.Windows.Forms.ToolStripSeparator();
 			this.buttontest = new System.Windows.Forms.ToolStripSplitButton();
-			this.buttonbuildlightmaps = new CodeImp.DoomBuilder.Controls.ToolStripActionButton();
+			this.buttonlightmaps = new System.Windows.Forms.ToolStripSplitButton();
 			this.seperatortesting = new System.Windows.Forms.ToolStripSeparator();
 			this.statusbar = new System.Windows.Forms.StatusStrip();
 			this.statuslabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -1406,7 +1406,7 @@ namespace CodeImp.DoomBuilder.Windows
 			this.buttontoggleeventlines,
 			this.buttontogglevisualvertices,
 			this.separatorgzmodes,
-			this.buttonbuildlightmaps,
+			this.buttonlightmaps,
 			this.seperatortesting,
 			this.buttontest});
 			this.toolbar.Location = new System.Drawing.Point(0, 24);
@@ -2237,15 +2237,15 @@ namespace CodeImp.DoomBuilder.Windows
 			this.separatorgzmodes.Name = "separatorgzmodes";
 			this.separatorgzmodes.Size = new System.Drawing.Size(6, 25);
 			// 
-			// buttonbuildlightmaps
+			// buttonlightmaps
 			// 
-			this.buttonbuildlightmaps.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.buttonbuildlightmaps.Image = global::CodeImp.DoomBuilder.Properties.Resources.Light;
-			this.buttonbuildlightmaps.Name = "buttonbuildlightmaps";
-			this.buttonbuildlightmaps.Size = new System.Drawing.Size(23, 22);
-			this.buttonbuildlightmaps.Tag = "builder_buildlightmaps";
-			this.buttonbuildlightmaps.Text = "Build Lightmaps";
-			this.buttonbuildlightmaps.Click += new System.EventHandler(this.InvokeTaggedAction);
+			this.buttonlightmaps.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.buttonlightmaps.Image = global::CodeImp.DoomBuilder.Properties.Resources.Light;
+			this.buttonlightmaps.Name = "buttonbuildlightmaps";
+			this.buttonlightmaps.Size = new System.Drawing.Size(23, 22);
+			this.buttonlightmaps.Tag = "builder_buildlightmaps";
+			this.buttonlightmaps.Text = "Build Lightmaps";
+			this.buttonlightmaps.ButtonClick += new System.EventHandler(this.InvokeTaggedAction);
 			// 
 			// seperatortesting
 			// 
@@ -2998,7 +2998,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.ToolStripMenuItem itemgridsetup;
 		private System.Windows.Forms.Timer statusflasher;
 		private System.Windows.Forms.ToolStripSplitButton buttontest;
-		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonbuildlightmaps;
+		private System.Windows.Forms.ToolStripSplitButton buttonlightmaps;
 		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoncut;
 		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttoncopy;
 		private CodeImp.DoomBuilder.Controls.ToolStripActionButton buttonpaste;
