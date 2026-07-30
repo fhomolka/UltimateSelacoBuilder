@@ -111,7 +111,7 @@ namespace CodeImp.DoomBuilder.Controls
 			classname.Text = (displayclassname ? ti.ClassName : "--"); //mxd
 
 			string lowerClass = ti.ClassName.ToLower();
-			if(lowerClass == "pathnode" || lowerClass == "doornode" || lowerClass == "snipernode")
+			if(lowerClass == "pathnode" || lowerClass == "doornode" || lowerClass == "snipernode" || lowerClass == "tanknode")
 			{
 				int nodeid = t.Fields.GetValue("user_nodeid", -1);
 				if (nodeid < 0) nodeid = (int)t.Fields.GetValue("user_nodeid", -1.0);

@@ -170,6 +170,7 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 					case "snipernode":
 					case "pathnode":
 					case "doornode":
+					case "tanknode":
 						int nodeid = t.Fields.GetValue("user_nodeid", -1);
 						if (nodeid < 0) nodeid = (int)t.Fields.GetValue("user_nodeid", -1.0);
 						if (nodeid >= 0 && !result.PathNodes.ContainsKey(nodeid))
@@ -418,6 +419,9 @@ namespace CodeImp.DoomBuilder.GZBuilder.Data
 						if(tt.Fields.GetValue("user_connection" + (x + 1) + "_obstacle", 0) > 0 || (int)tt.Fields.GetValue("user_connection" + (x + 1) + "_obstacle", 0.0) > 0)
 						{
 							col = PixelColor.FromInt(0xFF0000).WithAlpha(75);
+						} else if(tt.Type == 1231)
+						{
+							col = PixelColor.FromInt(0xDCE7C9).WithAlpha(100);
 						}
 						lines.Add(new Line3D(start, end, col));
 					}
