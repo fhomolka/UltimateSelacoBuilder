@@ -1670,6 +1670,10 @@ namespace CodeImp.DoomBuilder.Windows
 			itemDeviceCPU.Checked = General.Settings.LightmapDeviceIndex == 1;
 			itemDeviceCPU.Click += (object sender, EventArgs e) => { General.Settings.LightmapDeviceIndex = 1; UpdateLightmapSettings(); };
 
+			ToolStripMenuItem itemCompression = new ToolStripMenuItem("Compression Enabled");
+			itemCompression.Checked = General.Settings.LightmapCompression;
+			itemCompression.Click += (object sender, EventArgs e) => { General.Settings.LightmapCompression = !General.Settings.LightmapCompression; UpdateLightmapSettings(); };
+
 			ToolStripMenuItem itemResolutionFull = new ToolStripMenuItem("Resolution: Full (1.0x)");
 			itemResolutionFull.Checked = General.Settings.LightmapRenderQuality == 0;
 			itemResolutionFull.Click += (object sender, EventArgs e) => { General.Settings.LightmapRenderQuality = 0; UpdateLightmapSettings(); };
@@ -1696,6 +1700,8 @@ namespace CodeImp.DoomBuilder.Windows
 			{
 				itemDeviceGPU,
 				itemDeviceCPU,
+				new ToolStripSeparator { Padding = new Padding(0, 3, 0, 3) },
+				itemCompression,
 				new ToolStripSeparator { Padding = new Padding(0, 3, 0, 3) },
 				itemResolutionFull,
 				itemResolutionHalf,

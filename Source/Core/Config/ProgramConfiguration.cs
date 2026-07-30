@@ -169,6 +169,7 @@ namespace CodeImp.DoomBuilder.Config
 
 		// Lightmapping
 		private int lightmapdeviceindex;
+		private bool lightmapcompression;
 		private int lightmaprenderquality;
 		private bool lightmapprogressautoclose;
 		
@@ -318,6 +319,7 @@ namespace CodeImp.DoomBuilder.Config
 		// Lightmaps
 
 		public int LightmapDeviceIndex { get { return lightmapdeviceindex; } set { lightmapdeviceindex = value; } }
+		public bool LightmapCompression { get { return lightmapcompression; } set { lightmapcompression = value; } }
 		public int LightmapRenderQuality { get { return lightmaprenderquality; } set { lightmaprenderquality = value; } }
 		public bool LightmapProgressAutoClose { get { return lightmapprogressautoclose; } set { lightmapprogressautoclose = value; } }
 

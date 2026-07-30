@@ -103,6 +103,7 @@ namespace CodeImp.DoomBuilder.Windows
 			cbParallelizedVertexPlotting.Checked = General.Settings.ParallelizedVertexPlotting;
 			lightmapdevice.SelectedIndex = General.Settings.LightmapDeviceIndex;
 			lightmapquality.SelectedIndex = General.Settings.LightmapRenderQuality;
+			lightmapcompression.SelectedIndex = General.Settings.LightmapCompression ? 1 : 0;
 			cbLightmapAutoClose.Checked = General.Settings.LightmapProgressAutoClose;
 
 			//mxd
@@ -473,6 +474,7 @@ namespace CodeImp.DoomBuilder.Windows
 			// Lightmapping
 			General.Settings.LightmapDeviceIndex = lightmapdevice.SelectedIndex;
 			General.Settings.LightmapRenderQuality = lightmapquality.SelectedIndex;
+			General.Settings.LightmapCompression = lightmapcompression.SelectedIndex == 1;
 			General.Settings.LightmapProgressAutoClose = cbLightmapAutoClose.Checked;
 
 			foreach(ListViewItem lvi in lvToastActions.Items)

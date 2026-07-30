@@ -97,6 +97,11 @@ namespace CodeImp.DoomBuilder.Windows
 				arguments += $" --downsample={General.Settings.LightmapRenderQuality}";
 			}
 
+			if (General.Settings.LightmapCompression)
+			{
+				arguments += " --compress-lightmaps";
+			}
+
 			string projectFilesPath = FindProjectFilesPath();
 			if (!string.IsNullOrEmpty(projectFilesPath))
 			{

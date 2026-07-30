@@ -243,10 +243,12 @@ namespace CodeImp.DoomBuilder.Windows
 			this.rbToastPosTL = new System.Windows.Forms.RadioButton();
 			this.tablightmapping = new System.Windows.Forms.TabPage();
 			this.cbLightmapAutoClose = new System.Windows.Forms.CheckBox();
-			this.lightmapdevice = new System.Windows.Forms.ComboBox();
-			this.label35 = new System.Windows.Forms.Label();
-			this.label36 = new System.Windows.Forms.Label();
 			this.lightmapquality = new System.Windows.Forms.ComboBox();
+			this.lightmapdevice = new System.Windows.Forms.ComboBox();
+			this.label36 = new System.Windows.Forms.Label();
+			this.label35 = new System.Windows.Forms.Label();
+			this.label37 = new System.Windows.Forms.Label();
+			this.lightmapcompression = new System.Windows.Forms.ComboBox();
 			groupBox1 = new System.Windows.Forms.GroupBox();
 			label7 = new System.Windows.Forms.Label();
 			label5 = new System.Windows.Forms.Label();
@@ -2767,6 +2769,8 @@ namespace CodeImp.DoomBuilder.Windows
 			// 
 			// tablightmapping
 			// 
+			this.tablightmapping.Controls.Add(this.lightmapcompression);
+			this.tablightmapping.Controls.Add(this.label37);
 			this.tablightmapping.Controls.Add(this.cbLightmapAutoClose);
 			this.tablightmapping.Controls.Add(this.lightmapquality);
 			this.tablightmapping.Controls.Add(this.lightmapdevice);
@@ -2784,13 +2788,28 @@ namespace CodeImp.DoomBuilder.Windows
 			// 
 			this.cbLightmapAutoClose.AutoSize = true;
 			this.cbLightmapAutoClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cbLightmapAutoClose.Location = new System.Drawing.Point(16, 72);
+			this.cbLightmapAutoClose.Location = new System.Drawing.Point(16, 104);
 			this.cbLightmapAutoClose.Name = "cbLightmapAutoClose";
 			this.cbLightmapAutoClose.Size = new System.Drawing.Size(163, 17);
 			this.cbLightmapAutoClose.TabIndex = 3;
 			this.cbLightmapAutoClose.Text = "Auto Close Progress Window";
 			this.cbLightmapAutoClose.UseVisualStyleBackColor = true;
 			this.cbLightmapAutoClose.CheckedChanged += new System.EventHandler(this.cbLightmapAutoClose_CheckedChanged);
+			// 
+			// lightmapquality
+			// 
+			this.lightmapquality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.lightmapquality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lightmapquality.FormattingEnabled = true;
+			this.lightmapquality.Items.AddRange(new object[] {
+            "Full (1x)",
+            "Half (0.5x)",
+            "Quarter (0.25x)"});
+			this.lightmapquality.Location = new System.Drawing.Point(96, 48);
+			this.lightmapquality.Name = "lightmapquality";
+			this.lightmapquality.Size = new System.Drawing.Size(168, 21);
+			this.lightmapquality.TabIndex = 2;
+			this.lightmapquality.SelectedIndexChanged += new System.EventHandler(this.lightmapquality_SelectedIndexChanged);
 			// 
 			// lightmapdevice
 			// 
@@ -2800,21 +2819,11 @@ namespace CodeImp.DoomBuilder.Windows
 			this.lightmapdevice.Items.AddRange(new object[] {
             "Prefer GPU",
             "CPU"});
-			this.lightmapdevice.Location = new System.Drawing.Point(72, 16);
+			this.lightmapdevice.Location = new System.Drawing.Point(96, 20);
 			this.lightmapdevice.Name = "lightmapdevice";
 			this.lightmapdevice.Size = new System.Drawing.Size(168, 21);
 			this.lightmapdevice.TabIndex = 1;
 			this.lightmapdevice.SelectedIndexChanged += new System.EventHandler(this.lightmapdevice_SelectedIndexChanged);
-			// 
-			// label35
-			// 
-			this.label35.AutoSize = true;
-			this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label35.Location = new System.Drawing.Point(16, 20);
-			this.label35.Name = "label35";
-			this.label35.Size = new System.Drawing.Size(44, 13);
-			this.label35.TabIndex = 0;
-			this.label35.Text = "Device:";
 			// 
 			// label36
 			// 
@@ -2826,20 +2835,38 @@ namespace CodeImp.DoomBuilder.Windows
 			this.label36.TabIndex = 0;
 			this.label36.Text = "Quality:";
 			// 
-			// lightmapquality
+			// label35
 			// 
-			this.lightmapquality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.lightmapquality.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lightmapquality.FormattingEnabled = true;
-			this.lightmapquality.Items.AddRange(new object[] {
-            "Full (1x)",
-            "Half (0.5x)",
-            "Quarter (0.25x)"});
-			this.lightmapquality.Location = new System.Drawing.Point(72, 44);
-			this.lightmapquality.Name = "lightmapquality";
-			this.lightmapquality.Size = new System.Drawing.Size(168, 21);
-			this.lightmapquality.TabIndex = 2;
-			this.lightmapquality.SelectedIndexChanged += new System.EventHandler(this.lightmapquality_SelectedIndexChanged);
+			this.label35.AutoSize = true;
+			this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label35.Location = new System.Drawing.Point(16, 20);
+			this.label35.Name = "label35";
+			this.label35.Size = new System.Drawing.Size(44, 13);
+			this.label35.TabIndex = 0;
+			this.label35.Text = "Device:";
+			// 
+			// label37
+			// 
+			this.label37.AutoSize = true;
+			this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label37.Location = new System.Drawing.Point(16, 80);
+			this.label37.Name = "label37";
+			this.label37.Size = new System.Drawing.Size(70, 13);
+			this.label37.TabIndex = 4;
+			this.label37.Text = "Compression:";
+			// 
+			// lightmapcompression
+			// 
+			this.lightmapcompression.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.lightmapcompression.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lightmapcompression.FormattingEnabled = true;
+			this.lightmapcompression.Items.AddRange(new object[] {
+            "Disabled",
+            "Enabled"});
+			this.lightmapcompression.Location = new System.Drawing.Point(96, 76);
+			this.lightmapcompression.Name = "lightmapcompression";
+			this.lightmapcompression.Size = new System.Drawing.Size(168, 21);
+			this.lightmapcompression.TabIndex = 5;
 			// 
 			// PreferencesForm
 			// 
@@ -3142,5 +3169,7 @@ namespace CodeImp.DoomBuilder.Windows
 		private System.Windows.Forms.CheckBox cbLightmapAutoClose;
 		private System.Windows.Forms.ComboBox lightmapquality;
 		private System.Windows.Forms.Label label36;
+		private System.Windows.Forms.ComboBox lightmapcompression;
+		private System.Windows.Forms.Label label37;
 	}
 }
