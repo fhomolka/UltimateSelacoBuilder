@@ -489,6 +489,7 @@ namespace CodeImp.DoomBuilder.Config
 				// Lightmap
 				lightmapdeviceindex = cfg.ReadSetting("lightmapdeviceindex", 0);
 				lightmaprenderquality = cfg.ReadSetting("lightmaprenderquality", 0);
+				lightmapcompression = cfg.ReadSetting("lightmapcompression", false);
 				lightmapprogressautoclose = cfg.ReadSetting("lightmapprogressautoclose", false);
 
 				// Success
@@ -630,6 +631,7 @@ namespace CodeImp.DoomBuilder.Config
 			cfg.WriteSetting("lightmapdeviceindex", lightmapdeviceindex);
 			cfg.WriteSetting("lightmaprenderquality", lightmaprenderquality);
 			cfg.WriteSetting("lightmapprogressautoclose", lightmapprogressautoclose);
+			cfg.WriteSetting("lightmapcompression", lightmapcompression);
 
 			// Save settings configuration
 			General.WriteLogLine("Saving program configuration to \"" + filepathname + "\"...");
